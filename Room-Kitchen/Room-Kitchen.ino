@@ -76,71 +76,86 @@ void loop(){
   }
   Serial.print("Recevied String - ");
   Serial.print(str);
+  delay(10);
   Serial.println();
 
   //Turn on Room 1 Light On
   if(str == "RL1O")
   {
     if(flag1 == 1)          //light 1 is already on
+    {
       Serial.print('F:');
-     else
-     {
-      Serial.print('T:');
-      flag1 == 1;
-      //Relay Instruction
-      digitalWrite(light1,LOW);          
-      Serial.println("Light ON");
-      delay(2000);
-     }
+      delay(10);
+    }
+    else
+    {
+     Serial.print('T:');
+     delay(10);
+     flag1 == 1;
+     //Relay Instruction
+     digitalWrite(light1,LOW);          
+     Serial.println("Light ON");
+     delay(2000);
+    }
   }
 
   //Turn on Room Light 1 Off
   if(str == "RL1F")
   {
     if(flag1 == 0)          //light 1 is already off
+    {
       Serial.print('F:');
-     else
-     {
-      Serial.print('T:');
-      flag1 == 0;
-
-      //Relay Instruction
-      digitalWrite(light1,HIGH);          
-      Serial.println("Light OFF");
-      delay(2000);
-     }
+      delay(10);
+    }
+    else
+    {
+     Serial.print('T:');
+     delay(10);
+     flag1 == 0;
+     //Relay Instruction
+     digitalWrite(light1,HIGH);          
+     Serial.println("Light OFF");
+     delay(2000);
+    }
   }
 
   //Turn on Room Light 2  On
   if(str == "RL2O")
   {
     if(flag2 == 1)          //Light 2 is already on
-      Serial.print('F;');
-     else
-     {
-      Serial.print('T;');
-      flag2 == 1;
-      //Relay Instruction
-      digitalWrite(light2,LOW);          
-      Serial.println("Light ON");
-      delay(2000);
-     }
+    {
+      Serial.print('F:');
+      delay(10);
+    }
+    else
+    {
+     Serial.print('T:');
+     delay(10);
+     flag2 == 1;
+     //Relay Instruction
+     digitalWrite(light2,LOW);          
+     Serial.println("Light ON");
+     delay(2000);
+    }
   }
-
   //Turn off Room Light 2 Off
   if(str == "RL1F")
   {
     if(flag2 == 0)          //Light 2 is already off
-      Serial.print('F;');
-     else
-     {
-      Serial.print('T;');
-      flag2 == 0;
-      //Relay Instruction
-      digitalWrite(light2,HIGH);          
-      Serial.println("Light OFF");
-      delay(2000);
-     }
+    {
+      Serial.print('F:');
+      delay(10);
+    }
+    else
+    {
+     Serial.print('T:');
+     delay(10);
+     flag2 == 0;
+     //Relay Instruction
+     digitalWrite(light2,HIGH);          
+     Serial.println("Light OFF");
+     delay(2000);
+    }
   }
 
   //To send back status of Lights
