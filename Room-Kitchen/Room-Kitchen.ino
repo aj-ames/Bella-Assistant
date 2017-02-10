@@ -62,6 +62,7 @@ void loop(){
     //To accumulate the command
     while(Serial.available())
     {
+      ch=Serial.read();
       if(ch == ':')
       {
         break;
