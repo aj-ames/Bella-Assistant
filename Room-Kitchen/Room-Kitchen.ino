@@ -82,10 +82,10 @@ void loop(){
   if(str == "RL1O")
   {
     if(flag1 == 1)          //light 1 is already on
-      Serial.print('F');
+      Serial.print('F:');
      else
      {
-      Serial.print('T');
+      Serial.print('T:');
       flag1 == 1;
       //Relay Instruction
       digitalWrite(light1,LOW);          
@@ -98,10 +98,10 @@ void loop(){
   if(str == "RL1F")
   {
     if(flag1 == 0)          //light 1 is already off
-      Serial.print('F');
+      Serial.print('F:');
      else
      {
-      Serial.print('T');
+      Serial.print('T:');
       flag1 == 0;
 
       //Relay Instruction
@@ -115,10 +115,10 @@ void loop(){
   if(str == "RL2O")
   {
     if(flag2 == 1)          //Light 2 is already on
-      Serial.print('F');
+      Serial.print('F;');
      else
      {
-      Serial.print('T');
+      Serial.print('T;');
       flag2 == 1;
       //Relay Instruction
       digitalWrite(light2,LOW);          
@@ -131,10 +131,10 @@ void loop(){
   if(str == "RL1F")
   {
     if(flag2 == 0)          //Light 2 is already off
-      Serial.print('F');
+      Serial.print('F;');
      else
      {
-      Serial.print('T');
+      Serial.print('T;');
       flag2 == 0;
       //Relay Instruction
       digitalWrite(light2,HIGH);          
@@ -155,7 +155,8 @@ void loop(){
   if(str == "KS")
   {
     long d1,d2,d3,cm1,cm2,cm3;
-  
+    long len = 100; //Assumed length of empty box. Change later when boxes are obtained.
+    int p1 = 0, p2 = 0, p3 = 0; //Percentage calculation. 
     digitalWrite(tp1, LOW); //low pulse first to ensure a clean high pulse.
     delayMicroseconds(2);
   
@@ -172,8 +173,9 @@ void loop(){
 
     // convert the time into a distance
     cm1 = microsecondsToCentimeters(d1);
+    p1 = (cm1/len)*100; // Percentage Calculation
   
-    Serial.print(cm1);
+    Serial.print(p1);
     //Serial.print("cm");
     //Serial.println();
   
@@ -196,8 +198,9 @@ void loop(){
 
     // convert the time into a distance
     cm2 = microsecondsToCentimeters(d2);
+    p2 = (cm2/len)*100; // Percentage Calculation
   
-    Serial.print(cm2);
+    Serial.print(p2);
     //Serial.print("cm");
     //Serial.println();
   
@@ -220,8 +223,9 @@ void loop(){
 
     // convert the time into a distance
     cm3 = microsecondsToCentimeters(d3);
+    p3 = (cm3/len)*100; // Percentage Calculation
   
-    Serial.print(cm3);
+    Serial.print(p3);
     //Serial.print("cm");
     //Serial.println();
   
