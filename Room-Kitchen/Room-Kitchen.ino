@@ -12,7 +12,6 @@
  *  
  *  Note: ':' is used as Command Termination Character
  */
-
 //Pin 10 and 11 for Relay
 #define light1  10
 #define light2 11
@@ -34,19 +33,22 @@ int cm1 = 0, cm2 = 0, cm3 = 0;
 
 String str = "";
 char ch = ' ';
+boolean cmdComplete = false;
+boolean cmdDone = false;
+
 
 
 //Function to Convert the duration to distance
-long microsecondsToCentimeters(long microseconds)
-{
+long microToCms(long microseconds) {
   return microseconds / 29 / 2;
 }
 
-void setup(){ 
+void setup() {
   //Beginning serial at 9600 baud
   Serial.begin(9600);
-  Serial.println("Wassup, Bella?"); // Connection established and working!
-
+  // Connection established and working!
+  Serial.println("Wassup, Bella?"); 
+  
   //Setting relay pins as Output
   pinMode(light1, OUTPUT);       
   pinMode(light2, OUTPUT);
@@ -60,182 +62,188 @@ void setup(){
   pinMode(ep1, INPUT);
   pinMode(ep2, INPUT);
   pinMode(ep3, INPUT); 
+
 }
 
-void loop(){
-  //Check if Serial is transmitting
-  if(Serial.available() > 0)
-  {
-    //str = "";
-    //To accumulate the command
+void loop() {
+  // If serial is transmitting
+  if(Serial.available() > 0) {
     while(Serial.available()) {
       ch = Serial.read(); // Read a byte from the Serial buffer
       delay(5);
-      if(ch == ':')
-      {
+      if(ch == ':') {
         Serial.println("Got the command");
+        cmdComplete = true;
         break;
       }
-      else
-      { 
+      else { 
         str += ch;
     //    Serial.print(str);
       }
       delay(5);
     }
-  }
-  //Serial.print("Recevied String - ");
-  Serial.print(str);
-  Serial.println();
+  }// if serial available
 
-  //Turn on Room 1 Light On
-  if(str == "RL1O")
-  {
-    if(flag1 == 1)          //light 1 is already on
-      Serial.print('F');
-     else
-     {
-      Serial.print('T');
-      flag1 == 1;
-      //Relay Instruction
-      digitalWrite(light1,LOW);          
-      Serial.println("Light ON");
-      delay(2000);
-     }
-  }
+  // If command is complete
+    if(cmdComplete) {
+        //Turn on Room 1 Light 
+        if(str.equals("RL1O")) {
+          if(flag1) {
+            Serial.println("F:"); // light is already on
+            cmdDone = true; // command executed
+               
+          }
+          else {
+            Serial.println("T:");
+            flag1 = 1; // Change flag status
+            //Relay Instruction
+            digitalWrite(light1,LOW);          
+            Serial.println("Light ON");
+            cmdDone = true; // command executed
+               
+            delay(20);
+          }
+        }
+        //Turn off Room Light 1 
+        if(str.equals("RL1F")) {
+          if(!flag1) { //light 1 is already off
+            cmdDone = true; // command executed
+               
+            Serial.print('F');
+          }
+          else {
+            Serial.print('T');
+            flag1 = 0;
+            //Relay Instruction
+            digitalWrite(light1,HIGH);          
+            Serial.println("Light OFF");
+            cmdDone = true; // command executed
+               
+            delay(20);
+          }
+        }
+        //Turn on Room Light 2   
+        if(str.equals("RL2O")) {
+          if(flag2) {          //light 1 is already on
+            Serial.print('F');
+            cmdDone = true; // command executed
+               
+          }
+          else {
+            Serial.print('T');
+            flag2 = 1;
+            //Relay Instruction
+            digitalWrite(light2,LOW);          
+            Serial.println("Light ON");
+            cmdDone = true; // command executed
+               
+            delay(20);
+          }
+        }
+        //Turn off Room Light 2 
+        if(str.equals("RL2F")) {
+          if(!flag2) {       //light 2 is already off
+            Serial.print('F');
+            cmdDone = true; // command executed
+               
+          }
+          else {
+            Serial.print('T');
+            flag2 = 0;
+            //Relay Instruction
+            digitalWrite(light2,HIGH);          
+            Serial.println("Light OFF");
+            cmdDone = true; // command executed
+               
+            delay(20);
+          }
+        }
+        if(str.equals("RLS")) {
+          Serial.print(flag1);
+          Serial.print(":");
+          Serial.println(flag2);
+          cmdDone = true; // command executed
+             
+          delay(10);
+        }
 
-  //Turn on Room Light 1 Off
-  if(str == "RL1F")
-  {
-    if(flag1 == 0)          //light 1 is already off
-      Serial.print('F');
-     else
-     {
-      Serial.print('T');
-      flag1 == 0;
-
-      //Relay Instruction
-      digitalWrite(light1,HIGH);          
-      Serial.println("Light OFF");
-      delay(2000);
-     }
-  }
-
-  //Turn on Room Light 2  On
-  if(str == "RL2O")
-  {
-    if(flag2 == 1)          //Light 2 is already on
-      Serial.print('F');
-     else
-     {
-      Serial.print('T');
-      flag2 == 1;
-      //Relay Instruction
-      digitalWrite(light2,LOW);          
-      Serial.println("Light ON");
-      delay(2000);
-     }
-  }
-
-  //Turn off Room Light 2 Off
-  if(str == "RL1F")
-  {
-    if(flag2 == 0)          //Light 2 is already off
-      Serial.print('F');
-     else
-     {
-      Serial.print('T');
-      flag2 == 0;
-      //Relay Instruction
-      digitalWrite(light2,HIGH);          
-      Serial.println("Light OFF");
-      delay(2000);
-     }
-  }
-
-  //To send back status of Lights
-  if(str == "RLS")
-  {
-    Serial.print(flag1);
-    delay(10);
-    Serial.print(flag2);
-    delay(10);
-  }
-
-  if(str == "KS")
-  {
-    long d1,d2,d3,cm1,cm2,cm3;
+        // Get the Kitchen Status
+        if(str == "KS") {
+          long d1,d2,d3,cm1,cm2,cm3;
   
-    digitalWrite(tp1, LOW); //low pulse first to ensure a clean high pulse.
-    delayMicroseconds(2);
+          digitalWrite(tp1, LOW); //low pulse first to ensure a clean high pulse.
+          delayMicroseconds(2);
   
-    digitalWrite(tp1, HIGH);
-    delayMicroseconds(10);
+          digitalWrite(tp1, HIGH);
+          delayMicroseconds(10);
   
-    digitalWrite(tp1, LOW);
+          digitalWrite(tp1, LOW);
 
-    // Read the signal from the sensor: a HIGH pulse whose
-    // duration is the time (in microseconds) from the sending
-    // of the ping to the reception of its echo off of an object.
+         // Read the signal from the sensor: a HIGH pulse whose
+        // duration is the time (in microseconds) from the sending
+        // of the ping to the reception of its echo off of an object.
   
-    d1 = pulseIn(ep1, HIGH);
+          d1 = pulseIn(ep1, HIGH);
 
-    // convert the time into a distance
-    cm1 = microsecondsToCentimeters(d1);
+          // convert the time into a distance
+          cm1 = microToCms(d1);
   
-    Serial.print(cm1);
-    //Serial.print("cm");
-    //Serial.println();
+          Serial.print(cm1);
+          //Serial.print("cm");
+          //Serial.println();
   
-    delay(100);
-
-    
-    digitalWrite(tp2, LOW); //low pulse first to ensure a clean high pulse.
-    delayMicroseconds(2);
-  
-    digitalWrite(tp2, HIGH);
-    delayMicroseconds(10);
-  
-    digitalWrite(tp2, LOW);
-
-    // Read the signal from the sensor: a HIGH pulse whose
-    // duration is the time (in microseconds) from the sending
-    // of the ping to the reception of its echo off of an object.
-  
-    d2 = pulseIn(ep2, HIGH);
-
-    // convert the time into a distance
-    cm2 = microsecondsToCentimeters(d2);
-  
-    Serial.print(cm2);
-    //Serial.print("cm");
-    //Serial.println();
-  
-    delay(100);
+          delay(100);
 
     
-    digitalWrite(tp3, LOW); //low pulse first to ensure a clean high pulse.
-    delayMicroseconds(2);
+          digitalWrite(tp2, LOW); //low pulse first to ensure a clean high pulse.
+          delayMicroseconds(2);
   
-    digitalWrite(tp3, HIGH);
-    delayMicroseconds(10);
+          digitalWrite(tp2, HIGH);
+          delayMicroseconds(10);
   
-    digitalWrite(tp3, LOW);
+          digitalWrite(tp2, LOW);
 
     // Read the signal from the sensor: a HIGH pulse whose
     // duration is the time (in microseconds) from the sending
     // of the ping to the reception of its echo off of an object.
   
-    d3 = pulseIn(ep3, HIGH);
+          d2 = pulseIn(ep2, HIGH);
 
     // convert the time into a distance
-    cm3 = microsecondsToCentimeters(d3);
+          cm2 = microToCms(d2);
   
-    Serial.print(cm3);
+          Serial.print(cm2);
     //Serial.print("cm");
     //Serial.println();
   
-    delay(100);
-    }
-  } 
+          delay(100);
+
+          digitalWrite(tp3, LOW); //low pulse first to ensure a clean high pulse.
+          delayMicroseconds(2);
+  
+          digitalWrite(tp3, HIGH);
+          delayMicroseconds(10);
+  
+          digitalWrite(tp3, LOW);
+
+    // Read the signal from the sensor: a HIGH pulse whose
+    // duration is the time (in microseconds) from the sending
+    // of the ping to the reception of its echo off of an object.
+  
+          d3 = pulseIn(ep3, HIGH);
+
+    // convert the time into a distance
+          cm3 = microToCms(d3);
+          Serial.print(cm3);
+    //Serial.print("cm");
+    //Serial.println();
+  
+          delay(100);
+          cmdDone = true; // command executed
+             
+        }
+    }// if command complete
+    cmdDone = false;
+    str = "";
+}// void loop
 
