@@ -172,6 +172,8 @@ void loop() {
         // Get the Kitchen Status
         if(str == "KS") {
           long d1,d2,d3,cm1,cm2,cm3;
+          int len = 100; //Length of Box. Assumed value for now. Update after boxes are obtained
+          int p1,p2,p3; //To calculate percentage of grocery
   
           digitalWrite(tp1, LOW); //low pulse first to ensure a clean high pulse.
           delayMicroseconds(2);
@@ -189,8 +191,11 @@ void loop() {
 
           // convert the time into a distance
           cm1 = microToCms(d1);
+
+          //calculate percentage
+          p1=(cm1/len)*100;
   
-          Serial.print(cm1);
+          Serial.print(p1);
           //Serial.print("cm");
           //Serial.println();
   
@@ -213,8 +218,11 @@ void loop() {
 
     // convert the time into a distance
           cm2 = microToCms(d2);
+
+          //calculate percentage
+          p2=(cm2/len)*100;
   
-          Serial.print(cm2);
+          Serial.print(p2);
     //Serial.print("cm");
     //Serial.println();
   
@@ -236,7 +244,11 @@ void loop() {
 
     // convert the time into a distance
           cm3 = microToCms(d3);
-          Serial.print(cm3);
+
+          //calculate percentage
+          p3=(cm3/len)*100;
+          
+          Serial.print(p3);
     //Serial.print("cm");
     //Serial.println();
   
