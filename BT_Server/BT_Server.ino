@@ -20,9 +20,10 @@
  *  GSF - Garden Sprinkler Off
  *  GS - Garden Moisture Status
  *  
- *  Serial0 is used for Phone-Server Connection
- *  Serial1 is used for Server-Node1 Connection
- *  Serial2 is used for Server-Node2 Connection
+ *  Serial0 is used to view on Serial Monitor
+ *  Serial1 is used for Phone-Server Connection
+ *  Serial2 is used for Server-Node1 Connection
+ *  Serial3 is used for Server-Node2 Connection
  *  
  *  P.S. All commands are followed by ':' character to mark as a footer.
  */
@@ -36,99 +37,102 @@
  int item1,item2,item3; //Variables to receive food inventory
  
 void setup() {
-  Serial.begin(9600); //Slave HC-05 to connect to phone
-  Serial1.begin(9600); //Master HC-05 to connect to Arduino Uno 1
-  Serial2.begin(9600); //Master HC-05 to connect to Arduqino Uno 2
+  Serial1.begin(9600); //Slave HC-05 to connect to phone
+  Serial.print("Connection to Bella Established");
+  Serial2.begin(9600); //Master HC-05 to connect to Arduino Uno 1
+  Serial3.begin(9600); //Master HC-05 to connect to Arduino Uno 2
 }
 
 void loop() {
-  if(Serial.available() > 0)
-  {
-    Serial.print("Connection to Bella Established");
-    str == "";
-
     //Receiving Command from Bella
-    while(Serial.available() > 0)
+    while(Serial1.available() > 0)
     {
-      ch = Serial.read();
+      ch = Serial1.read();    str == "";
       if(ch == ':')
         break;
-       else
-        str+=ch;
+      else
+      {
+       str+=ch;
+      }    str == "";
+      delay(2);
     }
     delay(1);
+    Serial.println(str);
     //Pushing commands to different nodes
 
     //Pushing commands to node 1 for lights
     if(str == "RL1O" || str == "RL1F"|| str == "RL2O" || str == "RL2F")
     {
-      Serial1.print(str);
+      Serial2.print(str);
       delay(10);
             
       //Receiving Confirmation from Node 1 for lights
       str == "";
-      while(Serial1.available() > 0)
+      while(Serial2.available() > 0)
       {
-        ch = Serial.read();
+        ch = Serial2.read();
         if(ch == ':')
           break;
-         else
+        else
+        {
           str+=ch;
+          delay(2);
+        }
       }
       delay(1);
       
       //Sending back to Bella
-      Serial.print(str);
+      Serial1.print(str);
       delay(10);
     }
 
     //Pushing command to node 1 for lights
     else if(str == "RLS")
     {
-      Serial1.print(str);
+      Serial2.print(str);
       delay(10);
 
       //Receiving status of lights
       str == "";
-      while(Serial1.available() > 0)
+      while(Serial2.available() > 0)
       {
-        flag1 == Serial1.read();
+        flag1 == Serial2.read();
         delay(1);
-        flag2 == Serial1.read();
+        flag2 == Serial2.read();
         delay(1);
       }
       
       //Sending back to Bella
-      Serial.print(flag1);
+      Serial1.print(flag1);
       delay(10);
-      Serial.print(flag2);
+      Serial1.print(flag2);
       delay(10);
     }
 
     //Pushing Command to Node 1 for Kitchen Status
     else if(str == "KS")
     {
-      Serial1.print(str);
+      Serial2.print(str);
       delay(10);
       
       //Receiving values of items
       str == "";
-      while(Serial1.available() > 0)
+      while(Serial2.available() > 0)
       {
-        item1 = Serial1.read();
+        item1 = Serial2.read();
         delay(1);
-        item2 = Serial1.read();
+        item2 = Serial2.read();
         delay(1);
-        item3 = Serial1.read();
+        item3 = Serial2.read();
         delay(1);
       }
 
       //Sending back to Bella
-      Serial.print(item1);
+      Serial1.print(item1);
       delay(10);
-      Serial.print(item2);
+      Serial1.print(item2);
       delay(10);
-      Serial.print(item3);
+      Serial1.print(item3);
       delay(10);
     }
     else
