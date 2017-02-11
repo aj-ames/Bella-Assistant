@@ -25,7 +25,7 @@
  *  Serial2 is used for Server-Node1 Connection
  *  Serial3 is used for Server-Node2 Connection
  *  
- *  P.S. All commands are followed by ':' character to mark as a footer.
+ *  P.S. All commands are followed by ':' character to mark Command Termination
  */
 
  String str = ""; //Variable to accumulate command
