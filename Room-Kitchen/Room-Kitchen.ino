@@ -80,9 +80,10 @@ void loop() {
       else { 
         str += ch;
       }
-      //    Serial.print(str);
       delay(5);
     }
+    //    Serial.print(str);
+    //delay(10);
   }// if serial available
 
   // If command is complete
@@ -91,8 +92,8 @@ void loop() {
         if(str.equals("RL1O")) {
           if(flag1) {
             Serial.println("F:"); // light is already on
+            delay(10);
             cmdDone = true; // command executed
-               
           }
           else {
             Serial.println("T:");
@@ -101,70 +102,71 @@ void loop() {
             digitalWrite(light1,LOW);          
             Serial.println("Light ON");
             cmdDone = true; // command executed
-               
-            delay(20);
+            delay(10);
           }
         }
         //Turn off Room Light 1 
         if(str.equals("RL1F")) {
           if(!flag1) { //light 1 is already off
             cmdDone = true; // command executed
-            Serial.print('F');
+            Serial.print("F;");
+            delay(10);
+            cmdDone = true; //Command executed
           }
           else {
-            Serial.print('T');
+            Serial.print("T");
+            delay(10);
             flag1 = 0;
             //Relay Instruction
             digitalWrite(light1,HIGH);          
             Serial.println("Light OFF");
             cmdDone = true; // command executed
-               
-            delay(20);
+            delay(10);
           }
         }
         //Turn on Room Light 2   
         if(str.equals("RL2O")) {
           if(flag2) {          //light 1 is already on
-            Serial.print('F');
+            Serial.print("F");
+            delay(10);
             cmdDone = true; // command executed
                
           }
           else {
-            Serial.print('T');
+            Serial.print("T:");
+            delay(10);
             flag2 = 1;
             //Relay Instruction
             digitalWrite(light2,LOW);          
             Serial.println("Light ON");
             cmdDone = true; // command executed
-               
-            delay(20);
+            delay(10);
           }
         }
         //Turn off Room Light 2 
         if(str.equals("RL2F")) {
           if(!flag2) {       //light 2 is already off
-            Serial.print('F');
+            Serial.print("F:");
+            delay(10);
             cmdDone = true; // command executed
-               
           }
           else {
-            Serial.print('T');
+            Serial.print("T:");
+            delay(10);
             flag2 = 0;
             //Relay Instruction
             digitalWrite(light2,HIGH);          
             Serial.println("Light OFF");
             cmdDone = true; // command executed
-               
-            delay(20);
+            delay(10);
           }
         }
         if(str.equals("RLS")) {
           Serial.print(flag1);
-          Serial.print(":");
-          Serial.println(flag2);
-          cmdDone = true; // command executed
-             
           delay(10);
+          Serial.println(flag2);
+          delay(10);
+          cmdDone = true; // command executed
         }
 
         // Get the Kitchen Status
