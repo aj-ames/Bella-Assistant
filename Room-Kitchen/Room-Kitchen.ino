@@ -35,6 +35,13 @@ int cm1 = 0, cm2 = 0, cm3 = 0;
 String str = "";
 char ch = ' ';
 
+
+//Function to Convert the duration to distance
+long microsecondsToCentimeters(long microseconds)
+{
+  return microseconds / 29 / 2;
+}
+
 void setup(){ 
   //Beginning serial at 9600 baud
   Serial.begin(9600);
@@ -61,11 +68,12 @@ void loop(){
   {
     //str = "";
     //To accumulate the command
-    while(Serial.available())
+    while(Serial.available()) {
       ch = Serial.read(); // Read a byte from the Serial buffer
     {
       if(ch == ':')
       {
+        Serial.println("Got the command");
         break;
       }
       else
@@ -227,11 +235,6 @@ void loop(){
     //Serial.println();
   
     delay(100);
-  }
-}
-
-//Function to Convert the duration to distance
-long microsecondsToCentimeters(long microseconds)
-{
-  return microseconds / 29 / 2;
+    }
+  } 
 }
