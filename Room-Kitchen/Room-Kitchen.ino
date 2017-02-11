@@ -31,10 +31,11 @@ int flag2 = 0;
 //Variables to check grocery items
 int cm1 = 0, cm2 = 0, cm3 = 0;
 
-String str = "";
-char ch = ' ';
-boolean cmdComplete = false;
-boolean cmdDone = false;
+String str = ""; //Variable to accumulate command
+
+char ch = ' '; // Variable to receive each character
+boolean cmdComplete = false; //To check if command has been received
+boolean cmdDone = false; //To check if command has been executed
 
 
 
@@ -78,8 +79,8 @@ void loop() {
       }
       else { 
         str += ch;
-    //    Serial.print(str);
       }
+      //    Serial.print(str);
       delay(5);
     }
   }// if serial available
@@ -108,7 +109,6 @@ void loop() {
         if(str.equals("RL1F")) {
           if(!flag1) { //light 1 is already off
             cmdDone = true; // command executed
-               
             Serial.print('F');
           }
           else {
