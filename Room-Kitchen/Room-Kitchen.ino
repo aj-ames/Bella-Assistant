@@ -243,6 +243,7 @@ void loop() {
              
         }
     }// if command complete
+    cmdDone ? Serial.println("Command Executed") : Serial.println("Oops, seems like something went worng with the command"); // print the command execution status
     cmdDone = false;
     str = "";
 }// void loop
