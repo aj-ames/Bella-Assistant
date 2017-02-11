@@ -70,7 +70,7 @@ void loop(){
     //To accumulate the command
     while(Serial.available()) {
       ch = Serial.read(); // Read a byte from the Serial buffer
-    {
+      delay(5);
       if(ch == ':')
       {
         Serial.println("Got the command");
@@ -79,11 +79,12 @@ void loop(){
       else
       { 
         str += ch;
+    //    Serial.print(str);
       }
-      delay(1);
+      delay(5);
     }
   }
-  Serial.print("Recevied String - ");
+  //Serial.print("Recevied String - ");
   Serial.print(str);
   Serial.println();
 
@@ -237,4 +238,4 @@ void loop(){
     delay(100);
     }
   } 
-}
+
