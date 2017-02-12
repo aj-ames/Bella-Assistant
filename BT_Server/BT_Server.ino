@@ -26,6 +26,8 @@
  *  Serial3 is used for Server-Node2 Connection
  *  
  *  P.S. All commands are followed by ':' character to mark Command Termination
+ *  
+ *  Make sure to set the board as "Arduino/Genuino Mega 2560" before compiling.
  */
 
  String str = ""; //Variable to accumulate command
@@ -64,7 +66,7 @@ void loop() {
     //Pushing commands to different nodes
 
     //Pushing commands to node 1 for lights
-    if(str == "RL1O" || str == "RL1F"|| str == "RL2O" || str == "RL2F")
+    if(str.equals("RL1O") || str.equals("RL1F")|| str.equals("RL2O") || str.equals("RL2F"))
     {
       Serial2.print(str);
       delay(10);
@@ -93,7 +95,7 @@ void loop() {
     }
 
     //Pushing command to node 1 for lights
-    else if(str == "RLS")
+    else if(str.equals("RLS"))
     {
       Serial2.print(str);
       delay(10);
@@ -116,7 +118,7 @@ void loop() {
     }
 
     //Pushing Command to Node 1 for Kitchen Status
-    else if(str == "KS")
+    else if(str.equals("KS"))
     {
       Serial2.print(str);
       delay(10);
