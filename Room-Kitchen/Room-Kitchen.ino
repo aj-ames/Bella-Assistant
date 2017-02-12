@@ -34,8 +34,6 @@ int cm1 = 0, cm2 = 0, cm3 = 0;
 String str = ""; //Variable to accumulate command
 
 char ch = ' '; // Variable to receive each character
-boolean cmdComplete = false; //To check if command has been received
-boolean cmdDone = false; //To check if command has been executed
 
 
 
@@ -73,8 +71,6 @@ void loop() {
       ch = Serial.read(); // Read a byte from the Serial buffer
       delay(5);
       if(ch == ':') {
-        Serial.println("Got the command");
-        cmdComplete = true;
         break;
       }
       else { 
@@ -82,18 +78,15 @@ void loop() {
       }
       delay(5);
     }
-    //    Serial.print(str);
-    //delay(10);
+        Serial.print(str);
+    delay(1000);
   }// if serial available
 
-  // If command is complete
-    if(cmdComplete) {
         //Turn on Room 1 Light 
         if(str.equals("RL1O")) {
           if(flag1) {
             Serial.println("F:"); // light is already on
             delay(10);
-            cmdDone = true; // command executed
           }
           else {
             Serial.println("T:");
@@ -101,17 +94,14 @@ void loop() {
             //Relay Instruction
             digitalWrite(light1,LOW);          
             Serial.println("Light ON");
-            cmdDone = true; // command executed
             delay(10);
           }
         }
         //Turn off Room Light 1 
         if(str.equals("RL1F")) {
           if(!flag1) { //light 1 is already off
-            cmdDone = true; // command executed
             Serial.print("F;");
             delay(10);
-            cmdDone = true; //Command executed
           }
           else {
             Serial.print("T");
@@ -120,16 +110,14 @@ void loop() {
             //Relay Instruction
             digitalWrite(light1,HIGH);          
             Serial.println("Light OFF");
-            cmdDone = true; // command executed
             delay(10);
           }
         }
         //Turn on Room Light 2   
         if(str.equals("RL2O")) {
           if(flag2) {          //light 1 is already on
-            Serial.print("F");
+            Serial.print("F:");
             delay(10);
-            cmdDone = true; // command executed
                
           }
           else {
@@ -139,7 +127,6 @@ void loop() {
             //Relay Instruction
             digitalWrite(light2,LOW);          
             Serial.println("Light ON");
-            cmdDone = true; // command executed
             delay(10);
           }
         }
@@ -148,7 +135,6 @@ void loop() {
           if(!flag2) {       //light 2 is already off
             Serial.print("F:");
             delay(10);
-            cmdDone = true; // command executed
           }
           else {
             Serial.print("T:");
@@ -157,7 +143,6 @@ void loop() {
             //Relay Instruction
             digitalWrite(light2,HIGH);          
             Serial.println("Light OFF");
-            cmdDone = true; // command executed
             delay(10);
           }
         }
@@ -166,7 +151,6 @@ void loop() {
           delay(10);
           Serial.println(flag2);
           delay(10);
-          cmdDone = true; // command executed
         }
 
         // Get the Kitchen Status
@@ -253,12 +237,7 @@ void loop() {
     //Serial.println();
   
           delay(100);
-          cmdDone = true; // command executed
              
         }
-    }// if command complete
-    cmdDone ? Serial.println("Command Executed") : Serial.println("Oops, seems like something went worng with the command"); // print the command execution status
-    cmdDone = false;
-    str = "";
 }// void loop
 
