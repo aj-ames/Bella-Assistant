@@ -37,8 +37,9 @@
  int item1,item2,item3; //Variables to receive food inventory
  
 void setup() {
-  Serial1.begin(9600); //Slave HC-05 to connect to phone
+  Serial.begin(9600);
   Serial.print("Connection to Bella Established");
+  Serial1.begin(9600); //Slave HC-05 to connect to phone
   Serial2.begin(9600); //Master HC-05 to connect to Arduino Uno 1
   Serial3.begin(9600); //Master HC-05 to connect to Arduino Uno 2
 }
@@ -46,18 +47,20 @@ void setup() {
 void loop() {
     //Receiving Command from Bella
     while(Serial1.available() > 0)
-    {
-      ch = Serial1.read();    str == "";
+    {                    
+      ch = Serial1.read();    
       if(ch == ':')
         break;
       else
       {
-       str+=ch;
-      }    str == "";
-      delay(2);
+       str += ch;
+       delay(2);
+      }    
+      delay(10);
     }
-    delay(1);
+    delay(10);
     Serial.println(str);
+    delay(50);
     //Pushing commands to different nodes
 
     //Pushing commands to node 1 for lights
@@ -65,9 +68,9 @@ void loop() {
     {
       Serial2.print(str);
       delay(10);
+      str == "";
             
       //Receiving Confirmation from Node 1 for lights
-      str == "";
       while(Serial2.available() > 0)
       {
         ch = Serial2.read();
@@ -75,15 +78,18 @@ void loop() {
           break;
         else
         {
-          str+=ch;
+          str += ch;
           delay(2);
         }
       }
       delay(1);
+      Serial.println(str);
+      delay(50);
       
       //Sending back to Bella
       Serial1.print(str);
       delay(10);
+      str == "";
     }
 
     //Pushing command to node 1 for lights
@@ -91,9 +97,9 @@ void loop() {
     {
       Serial2.print(str);
       delay(10);
+      str == "";
 
       //Receiving status of lights
-      str == "";
       while(Serial2.available() > 0)
       {
         flag1 == Serial2.read();
@@ -114,17 +120,17 @@ void loop() {
     {
       Serial2.print(str);
       delay(10);
+      str == "";
       
       //Receiving values of items
-      str == "";
       while(Serial2.available() > 0)
       {
         item1 = Serial2.read();
-        delay(1);
+        delay(10);
         item2 = Serial2.read();
-        delay(1);
+        delay(10);
         item3 = Serial2.read();
-        delay(1);
+        delay(10);
       }
 
       //Sending back to Bella
@@ -139,5 +145,4 @@ void loop() {
       return;
 
      //STILL NEED TO ADD GARDEN FUNCTIONALITY
-   }
-}
+}          
