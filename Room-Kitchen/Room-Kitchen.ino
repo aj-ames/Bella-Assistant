@@ -35,6 +35,8 @@ String str = ""; //Variable to accumulate command
 
 char ch = ' '; // Variable to receive each character
 
+boolean cmdAvailable = false;
+
 
 
 //Function to Convert the duration to distance
@@ -71,6 +73,7 @@ void loop() {
       ch = Serial.read(); // Read a byte from the Serial buffer
       delay(5);
       if(ch == ':') {
+        cmdAvailable = true;
         break;
       }
       else { 
@@ -81,8 +84,8 @@ void loop() {
         Serial.print(str);
     delay(1000);
   }// if serial available
-
-        //Turn on Room 1 Light 
+    if(cmdAvailable) {
+         //Turn on Room 1 Light 
         if(str.equals("RL1O")) {
           if(flag1) {
             Serial.println("F:"); // light is already on
@@ -100,11 +103,11 @@ void loop() {
         //Turn off Room Light 1 
         if(str.equals("RL1F")) {
           if(!flag1) { //light 1 is already off
-            Serial.print("F;");
+            Serial.print("F:");
             delay(10);
           }
           else {
-            Serial.print("T");
+            Serial.print("T:");
             delay(10);
             flag1 = 0;
             //Relay Instruction
@@ -239,5 +242,7 @@ void loop() {
           delay(100);
              
         }
+    }// If cmd available   
+    cmdAvailable = false;
 }// void loop
 
