@@ -81,7 +81,7 @@ void loop() {
       }
       delay(5);
     }
-        Serial.print(str);
+        Serial.println(str);
     delay(1000);
   }// if serial available
     if(cmdAvailable) {
@@ -245,7 +245,5 @@ void loop() {
         cmdAvailable = false;
         str="";
     }// If cmd available   
-    cmdAvailable = false;
-    str="";
 }// void loop
 
