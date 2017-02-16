@@ -35,7 +35,8 @@ String str = ""; //Variable to accumulate command
 
 char ch = ' '; // Variable to receive each character
 
-boolean cmdAvailable = false;
+boolean cmdAvailable = false; // To see if a command is available for execution
+boolean cmdOK = false; // To check if have the right command and if it was executed
 
 
 
@@ -90,6 +91,7 @@ void loop() {
           if(flag1) {
             Serial.println("F:"); // light is already on
             delay(10);
+            cmdOK = true;
           }
           else {
             Serial.println("T:");
@@ -98,6 +100,7 @@ void loop() {
             digitalWrite(light1,LOW);          
             Serial.println("Light ON");
             delay(10);
+            cmdOK = true;
           }
         }
         //Turn off Room Light 1 
@@ -105,6 +108,7 @@ void loop() {
           if(!flag1) { //light 1 is already off
             Serial.print("F:");
             delay(10);
+            cmdOK = true;
           }
           else {
             Serial.print("T:");
@@ -114,6 +118,7 @@ void loop() {
             digitalWrite(light1,HIGH);          
             Serial.println("Light OFF");
             delay(10);
+            cmdOK = true;
           }
         }
         //Turn on Room Light 2   
@@ -121,6 +126,7 @@ void loop() {
           if(flag2) {          //light 1 is already on
             Serial.print("F:");
             delay(10);
+            cmdOK = true;
                
           }
           else {
@@ -131,6 +137,7 @@ void loop() {
             digitalWrite(light2,LOW);          
             Serial.println("Light ON");
             delay(10);
+            cmdOK = true;
           }
         }
         //Turn off Room Light 2 
@@ -138,6 +145,7 @@ void loop() {
           if(!flag2) {       //light 2 is already off
             Serial.print("F:");
             delay(10);
+            cmdOK = true;
           }
           else {
             Serial.print("T:");
@@ -147,6 +155,7 @@ void loop() {
             digitalWrite(light2,HIGH);          
             Serial.println("Light OFF");
             delay(10);
+            cmdOK = true;
           }
         }
         if(str.equals("RLS")) {
@@ -154,6 +163,7 @@ void loop() {
           delay(10);
           Serial.println(flag2);
           delay(10);
+          cmdOK = true;
         }
 
         // Get the Kitchen Status
@@ -240,10 +250,14 @@ void loop() {
     //Serial.println();
   
           delay(100);
+          cmdOK = true;
              
         }
-        cmdAvailable = false;
-        str="";
+        cmdAvailable = false; // For next iteration
+        str=""; // Empty the string for next command
+        cmdOK ? Serial.println("Command executed") : Serial.println("Error: wrong command issued"); // Command execution prompt
     }// If cmd available   
+    cmdOK = false; // For next iteration
+    
 }// void loop
 
