@@ -106,12 +106,12 @@ void loop() {
         //Turn off Room Light 1 
         if(str.equals("RL1F")) {
           if(!flag1) { //light 1 is already off
-            Serial.print("F:");
+            Serial.println("F:");
             delay(10);
             cmdOK = true;
           }
           else {
-            Serial.print("T:");
+            Serial.println("T:");
             delay(10);
             flag1 = 0;
             //Relay Instruction
@@ -124,13 +124,13 @@ void loop() {
         //Turn on Room Light 2   
         if(str.equals("RL2O")) {
           if(flag2) {          //light 1 is already on
-            Serial.print("F:");
+            Serial.println("F:");
             delay(10);
             cmdOK = true;
                
           }
           else {
-            Serial.print("T:");
+            Serial.println("T:");
             delay(10);
             flag2 = 1;
             //Relay Instruction
@@ -143,12 +143,12 @@ void loop() {
         //Turn off Room Light 2 
         if(str.equals("RL2F")) {
           if(!flag2) {       //light 2 is already off
-            Serial.print("F:");
+            Serial.println("F:");
             delay(10);
             cmdOK = true;
           }
           else {
-            Serial.print("T:");
+            Serial.println("T:");
             delay(10);
             flag2 = 0;
             //Relay Instruction
@@ -159,7 +159,7 @@ void loop() {
           }
         }
         if(str.equals("RLS")) {
-          Serial.print(flag1);
+          Serial.println(flag1);
           delay(10);
           Serial.println(flag2);
           delay(10);
@@ -192,7 +192,7 @@ void loop() {
           //calculate percentage
           p1=(cm1/len)*100;
   
-          Serial.print(p1);
+          Serial.println(p1);
           //Serial.print("cm");
           //Serial.println();
   
@@ -219,7 +219,7 @@ void loop() {
           //calculate percentage
           p2=(cm2/len)*100;
   
-          Serial.print(p2);
+          Serial.println(p2);
     //Serial.print("cm");
     //Serial.println();
   
@@ -245,7 +245,7 @@ void loop() {
           //calculate percentage
           p3=(cm3/len)*100;
           
-          Serial.print(p3);
+          Serial.println(p3);
     //Serial.print("cm");
     //Serial.println();
   
