@@ -242,7 +242,10 @@ void loop() {
           delay(100);
              
         }
+        cmdAvailable = false;
+        str="";
     }// If cmd available   
     cmdAvailable = false;
+    str="";
 }// void loop
 
