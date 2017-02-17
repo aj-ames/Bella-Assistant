@@ -6,8 +6,6 @@
  *  RL2O - Room Light 1 On
  *  RL2F - Room Light 2 On
  *  RLS - Room Lights Status
- *  F - Room Light Already On/Off
- *  T - Room Light Turned On/Off
  *  KS - Kitchen Status
  *  
  *  Note: ':' is used as Command Termination Character
@@ -28,8 +26,6 @@
 int flag1 = 0;
 int flag2 = 0;
 
-//Variables to check grocery items
-int cm1 = 0, cm2 = 0, cm3 = 0;
 
 String str = ""; //Variable to accumulate command
 
