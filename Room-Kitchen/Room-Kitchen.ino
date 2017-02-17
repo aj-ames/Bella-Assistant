@@ -78,7 +78,7 @@ void loop() {
       }
       delay(5);
     }
-       // Serial.println(str);
+        Serial.println(str);
     delay(1000);
   }// if serial available
     if(cmdAvailable) {
@@ -249,9 +249,16 @@ void loop() {
           cmdOK = true;
              
         }
+          if(str.equals("GSS")) {
+          Serial.println("M175:");
+          cmdOK = true;
+        }
         cmdAvailable = false; // For next iteration
         str=""; // Empty the string for next command
         //cmdOK ? Serial.println("Command executed") : Serial.println("Error: wrong command issued"); // Command execution prompt
+
+        // Get garden status (tentative code)
+      
     }// If cmd available   
     cmdOK = false; // For next iteration
     
