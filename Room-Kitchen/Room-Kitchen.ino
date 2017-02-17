@@ -89,12 +89,12 @@ void loop() {
          //Turn on Room 1 Light 
         if(str.equals("RL1O")) {
           if(flag1) {
-            Serial.println("F:"); // light is already on
+            Serial.println("F1"); // light is already on
             delay(10);
             cmdOK = true;
           }
           else {
-            Serial.println("T:");
+            Serial.println("T1");
             flag1 = 1; // Change flag status
             //Relay Instruction
             digitalWrite(light1,LOW);          
@@ -106,12 +106,12 @@ void loop() {
         //Turn off Room Light 1 
         if(str.equals("RL1F")) {
           if(!flag1) { //light 1 is already off
-            Serial.println("F:");
+            Serial.println("T4");
             delay(10);
             cmdOK = true;
           }
           else {
-            Serial.println("T:");
+            Serial.println("F4");
             delay(10);
             flag1 = 0;
             //Relay Instruction
@@ -124,13 +124,13 @@ void loop() {
         //Turn on Room Light 2   
         if(str.equals("RL2O")) {
           if(flag2) {          //light 1 is already on
-            Serial.println("F:");
+            Serial.println("F2");
             delay(10);
             cmdOK = true;
                
           }
           else {
-            Serial.println("T:");
+            Serial.println("T2");
             delay(10);
             flag2 = 1;
             //Relay Instruction
@@ -143,12 +143,12 @@ void loop() {
         //Turn off Room Light 2 
         if(str.equals("RL2F")) {
           if(!flag2) {       //light 2 is already off
-            Serial.println("F:");
+            Serial.println("F5");
             delay(10);
             cmdOK = true;
           }
           else {
-            Serial.println("T:");
+            Serial.println("T5");
             delay(10);
             flag2 = 0;
             //Relay Instruction
