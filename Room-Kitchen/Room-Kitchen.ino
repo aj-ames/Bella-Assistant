@@ -45,7 +45,7 @@ void setup() {
   //Beginning serial at 9600 baud
   Serial.begin(9600);
   // Connection established and working!
-  Serial.println("Wassup, Bella?"); 
+  //Serial.println("Wassup, Bella?"); 
   
   //Setting relay pins as Output
   pinMode(light1, OUTPUT);       
@@ -249,15 +249,16 @@ void loop() {
           cmdOK = true;
              
         }
+          // Get garden status (tentative code)
           if(str.equals("GSS")) {
-          Serial.println("M175:");
+          Serial.println("C130:");
           cmdOK = true;
         }
         cmdAvailable = false; // For next iteration
         str=""; // Empty the string for next command
         //cmdOK ? Serial.println("Command executed") : Serial.println("Error: wrong command issued"); // Command execution prompt
 
-        // Get garden status (tentative code)
+        
       
     }// If cmd available   
     cmdOK = false; // For next iteration
