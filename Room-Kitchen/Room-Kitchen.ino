@@ -85,16 +85,16 @@ void loop() {
          //Turn on Room 1 Light 
         if(str.equals("RL1O")) {
           if(flag1) {
-            Serial.println("F1"); // light is already on
+            Serial.println("F1:"); // light is already on
             delay(10);
             cmdOK = true;
           }
           else {
-            Serial.println("T1");
+            Serial.println("T1:");
             flag1 = 1; // Change flag status
             //Relay Instruction
             digitalWrite(light1,LOW);          
-            Serial.println("Light ON");
+           // Serial.println("Light ON");
             delay(10);
             cmdOK = true;
           }
@@ -102,12 +102,12 @@ void loop() {
         //Turn off Room Light 1 
         if(str.equals("RL1F")) {
           if(!flag1) { //light 1 is already off
-            Serial.println("T4");
+            Serial.println("T4:");
             delay(10);
             cmdOK = true;
           }
           else {
-            Serial.println("F4");
+            Serial.println("F4:");
             delay(10);
             flag1 = 0;
             //Relay Instruction
@@ -120,13 +120,13 @@ void loop() {
         //Turn on Room Light 2   
         if(str.equals("RL2O")) {
           if(flag2) {          //light 1 is already on
-            Serial.println("F2");
+            Serial.println("F2:");
             delay(10);
             cmdOK = true;
                
           }
           else {
-            Serial.println("T2");
+            Serial.println("T2:");
             delay(10);
             flag2 = 1;
             //Relay Instruction
@@ -137,14 +137,14 @@ void loop() {
           }
         }
         //Turn off Room Light 2 
-        if(str.equals("RL2F")) {
+        if(str.equals("RL2F:")) {
           if(!flag2) {       //light 2 is already off
             Serial.println("F5");
             delay(10);
             cmdOK = true;
           }
           else {
-            Serial.println("T5");
+            Serial.println("T5:");
             delay(10);
             flag2 = 0;
             //Relay Instruction
@@ -154,7 +154,7 @@ void loop() {
             cmdOK = true;
           }
         }
-        if(str.equals("RLS")) {
+        if(str.equals("RLS:")) {
           Serial.println(flag1);
           delay(10);
           Serial.println(flag2);
@@ -163,7 +163,7 @@ void loop() {
         }
 
         // Get the Kitchen Status
-        if(str == "KS") {
+        if(str == "KS:") {
           long d1,d2,d3,cm1,cm2,cm3;
           int len = 100; //Length of Box. Assumed value for now. Update after boxes are obtained
           int p1,p2,p3; //To calculate percentage of grocery
@@ -251,7 +251,7 @@ void loop() {
         }
         cmdAvailable = false; // For next iteration
         str=""; // Empty the string for next command
-        cmdOK ? Serial.println("Command executed") : Serial.println("Error: wrong command issued"); // Command execution prompt
+        //cmdOK ? Serial.println("Command executed") : Serial.println("Error: wrong command issued"); // Command execution prompt
     }// If cmd available   
     cmdOK = false; // For next iteration
     
