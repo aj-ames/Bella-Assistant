@@ -78,7 +78,7 @@ void loop() {
       }
       delay(5);
     }
-        Serial.println(str);
+       // Serial.println(str);
     delay(1000);
   }// if serial available
     if(cmdAvailable) {
