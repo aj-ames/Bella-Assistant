@@ -251,7 +251,7 @@ void loop() {
         }
           // Get garden status (tentative code)
           if(str.equals("GSS")) {
-          Serial.println("C275:");
+          Serial.println("C375:");
           cmdOK = true;
         }
         cmdAvailable = false; // For next iteration
