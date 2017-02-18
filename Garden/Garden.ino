@@ -3,14 +3,22 @@
  *  Command list:
  *  GSS - Garden status; return the moisture
  *  GSO - Garden sprinkler ON
- *  GSF - Garden sprinkler OFF
+ *  GSF - Garden sprinklerforced to turn ON (will  work only for 10 seconds)
  *  All the commands will have a delimiter at the end of the command, the delimiter being ":" 
  *  Acknowlegdement sent:
  *  T3 - Turned ON the sprinkler
- *  T6 - Turned OFF the sprinkler
- *  F3 - Sprinklers already turned ON
- *  F8 -  Sprinklers already turned OFF
+ *  T6 - Turned ON the sprinkler forcefully
+ *  F3 - Sprinklers already turned ON, working currently
+ *  F7 - Warning: the soil is too wet to be watered
  *  M1XY - Moisture content when status is asked for; where XY is the %
+ *  
+ *  The sprinkler flags:
+ *  Throught the program we will mantain a flag variable called 'sprinkler'; this is just to maintain the exit status of the function 'startSprinkler()'
+ *  The value of the flag can be as follows: 1, 2, 3, 4
+ *  1 - The sprinkler was turned ON; for command GSO
+ *  2 - The sprinkler was NOT turned ON because, the water is too wet; for command GSO
+ *  3 - The sprinklers are working, for command GSO
+ *  4 - The sprinkler was forced to turn ON; will work only for a period of 10 seconds, for command GSF
  */
 
 #include<Servo.h>
@@ -38,6 +46,8 @@ String cmd = "";
 char ch = '';
 boolean cmdAvailable = false;
 char delimiter = ':';
+int sprinkler = 0;
+boolean force = false; // Force start the motor
 
 
  void setup() {
@@ -81,7 +91,29 @@ void loop() {
         Serial.print("M1");
         Serial.println(moistureAvg);
      }
-     
+     if(cmd.equals("GSO")) {
+        sprinkler = startSprinkler(force);
+        switch(sprinkler) {
+          case 1: Serial.println("T3:");
+                  delay(5);
+                  break;
+          case 2: Serial.println("F7:");
+                  delay(5);
+                  break;
+          case 3: Serial.println("F3:");
+                  delay(5);
+                  break;
+          default:Serial.println("Error");
+        }
+     }
+     if(cmd.equals("GSF")) {
+        force = true;
+        sprinkler = startSprinkler(force);
+        if(sprinkler == 4) {
+          Serial.println("T6:");
+          delay(5);
+        }
+     }
   }// if command available
 }//void loop
 
