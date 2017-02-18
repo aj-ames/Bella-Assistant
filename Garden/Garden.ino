@@ -90,6 +90,7 @@ void loop() {
         moistureAvg = sampleMoisture();
         Serial.print("M1");
         Serial.println(moistureAvg);
+        moistureAvg = 0; // Reset the value after printing
      }
      if(cmd.equals("GSO")) {
         sprinkler = startSprinkler(force);
