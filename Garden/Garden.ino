@@ -35,12 +35,20 @@ const int ledPin = 13; // pin that turns on the LED
 
 
  void setup() {
-  //Beginning Serial at 9600 Buad
-  Serial.begin(9600);
-  //Message displayed on succesfull connection
-  Serial.println("Connection is up!");
-  
-  
+    //Beginning Serial at 9600 Buad
+    Serial.begin(9600);
+    //Message displayed on succesfull connection
+    Serial.println("Connection is up!");
+    servo1.attach(10);  // attaches the servo on pin 10 to the servo object 
+    initPosition():  
   
  }
- 
+
+
+ void initPosition() {
+    servo1.write(90); // set the servo to mid-point
+    delay(500);
+ }
+
+
+void loop
