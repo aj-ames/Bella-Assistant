@@ -26,7 +26,7 @@
 
 Servo servo1; // Servo object to control the servo
 // Define the pin
-const int analogInPin0 = A0; 
+const int analogPin = A0; 
 
 //The value that which will be read from the moisture sensor
 int moistureValue = 0;
@@ -87,7 +87,8 @@ void loop() {
   Serial.println(cmd);
   if(cmdAvailable) {
      if(cmd.equals("GSS") {
-        moistureAvg = sampleMoisture();
+        moistureAvg = moistureSampler();
+        delay(1000); //Just hold on a sec...
         Serial.print("M1");
         Serial.println(moistureAvg);
         moistureAvg = 0; // Reset the value after printing
@@ -118,4 +119,14 @@ void loop() {
      cmdAvailable = false;
   }// if command available
 }//void loop
+
+
+int moistureSampler() {
+  int sum = 0;
+  for(int i = 0; i < 25; i++) {
+    sum += analogRead(analogPin);
+    delay(1);
+  }
+  return sum / 25;
+}
 
