@@ -33,6 +33,12 @@ const int pumpCathodePin =  8;   //pin 8 connect to the cathode of the pump
 //The Arduino's LED pin
 const int ledPin = 13; // pin that turns on the LED
 
+//Command variables
+String cmd = "";
+char ch = '';
+boolean cmdAvailable = false;
+char delimiter = ':';
+
 
  void setup() {
    //Beginning Serial at 9600 Buad
@@ -56,7 +62,26 @@ const int ledPin = 13; // pin that turns on the LED
 
 void loop() {
   delay(500);
-  sampleMoisture();
-  
-}
+  if(Serial.available() > 0) {
+    while(Serial.available()) {
+      ch = Serial.read();
+      delay(5);
+      if(ch == delimiter) {
+        cmdAvailable = true;
+        break;
+      }
+      else
+        cmd += ch;
+    }
+  }
+  Serial.println(cmd);
+  if(cmdAvailable) {
+     if(cmd.equals("GSS") {
+        moistureAvg = sampleMoisture();
+        Serial.print("M1");
+        Serial.println(moistureAvg);
+     }
+     
+  }// if command available
+}//void loop
 
