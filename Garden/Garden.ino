@@ -114,6 +114,7 @@ void loop() {
           delay(5);
         }
      }
+     cmdAvailable = false;
   }// if command available
 }//void loop
 
