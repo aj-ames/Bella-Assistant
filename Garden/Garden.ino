@@ -1,4 +1,5 @@
-/* Code for the Arduino which will control the garden's automatic watering system
+/* 
+ *  Code for the Arduino which will control the garden's automatic watering system
  *  This will receive the commands from the Arduino mega, the main controller
  *  Command list:
  *  GSS - Garden status; return the moisture
@@ -88,6 +89,7 @@ void loop() {
   if(cmdAvailable) {
      if(cmd.equals("GSS") {
         moistureAvg = moistureSampler();
+        moistureAvg = (moistureAvg / 1024) * 100; // Calculate the percentage, for dear Bella *_*
         delay(1000); //Just hold on a sec...
         Serial.print("M1");
         Serial.println(moistureAvg);
