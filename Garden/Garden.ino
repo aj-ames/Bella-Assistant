@@ -11,7 +11,7 @@
  *  T3 - Turned ON the sprinkler
  *  T6 - Turned OFF the sprinkler forcefully
  *  F3 - Warning: the soil is too wet to be watered
- *  F6 - Remind the user that he has to water his/her plants through Bella
+ *  F6 - Remind the user that he/she has to water his/her plants; through Bella
  *  M1XY - Moisture content when status is asked for; where XY is the %
  *  
  */
