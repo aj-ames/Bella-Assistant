@@ -43,7 +43,7 @@ const int ledPin = 13; // pin that turns on the LED
 
 //Command variables
 String cmd = "";
-char ch = '';
+char ch = "";
 boolean cmdAvailable = false;
 char delimiter = ':';
 boolean force = false; // Force start the motor
@@ -85,7 +85,7 @@ void loop() {
   }
   Serial.println(cmd);
   if(cmdAvailable) {
-     if(cmd.equals("GSS") {
+     if(cmd.equals("GSS")) {
         moistureAvg = moistureSampler();
         moistureAvg = (moistureAvg / 1024) * 100; // Calculate the percentage, for dear Bella *_*
         delay(1000); //Just hold on a sec...
@@ -93,9 +93,11 @@ void loop() {
           Serial.print("M10");
           Serial.println(moistureAvg);
         }
-        Serial.print("M1");
-        Serial.println(moistureAvg);
-        moistureAvg = 0; // Reset the value after printing
+        else {
+         Serial.print("M1");
+         Serial.println(moistureAvg);
+         moistureAvg = 0; // Reset the value after printing 
+        }
      }
      if(cmd.equals("GSO")) {
         startSprinkler();
