@@ -89,6 +89,10 @@ void loop() {
         moistureAvg = moistureSampler();
         moistureAvg = (moistureAvg / 1024) * 100; // Calculate the percentage, for dear Bella *_*
         delay(1000); //Just hold on a sec...
+        if(moistureAvg < 10) {
+          Serial.print("M10");
+          Serial.println(moistureAvg);
+        }
         Serial.print("M1");
         Serial.println(moistureAvg);
         moistureAvg = 0; // Reset the value after printing
@@ -156,4 +160,4 @@ void stopSprinkler() {
   delay(500);
   initPosition();
 }
-
+n
