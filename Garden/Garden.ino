@@ -1,28 +1,27 @@
 /* 
+ *  
  *  Code for the Arduino which will control the garden's automatic watering system
  *  This will receive the commands from the Arduino mega, the main controller
  *  Command list:
  *  GSS - Garden status; return the moisture
- *  GSO - Garden sprinkler ON
- *  GSF - Garden sprinklerforced to turn ON (will  work only for 10 seconds)
+ *  GSO - Garden sprinkler turned ON
+ *  GSF - Garden sprinkler turned OFF
  *  All the commands will have a delimiter at the end of the command, the delimiter being ":" 
  *  Acknowlegdement sent:
  *  T3 - Turned ON the sprinkler
- *  T6 - Turned ON the sprinkler forcefully
- *  F3 - Sprinklers already turned ON, working currently
- *  F7 - Warning: the soil is too wet to be watered
+ *  T6 - Turned OFF the sprinkler forcefully
+ *  F3 - Warning: the soil is too wet to be watered
+ *  F6 - Remind the user that he has to water his/her plants through Bella
  *  M1XY - Moisture content when status is asked for; where XY is the %
  *  
- *  The sprinkler flags:
- *  Throught the program we will mantain a flag variable called 'sprinkler'; this is just to maintain the exit status of the function 'startSprinkler()'
- *  The value of the flag can be as follows: 1, 2, 3, 4
- *  1 - The sprinkler was turned ON; for command GSO
- *  2 - The sprinkler was NOT turned ON because, the water is too wet; for command GSO
- *  3 - The sprinklers are working, for command GSO
- *  4 - The sprinkler was forced to turn ON; will work only for a period of 10 seconds, for command GSF
  */
 
 #include<Servo.h>
+
+#define potPosition 60
+#define wateringTime 40
+#define triggerMiostureContent 200
+#define warningMoistureContent 950
 
 
 Servo servo1; // Servo object to control the servo
@@ -47,7 +46,6 @@ String cmd = "";
 char ch = '';
 boolean cmdAvailable = false;
 char delimiter = ':';
-int sprinkler = 0;
 boolean force = false; // Force start the motor
 
 
@@ -96,27 +94,13 @@ void loop() {
         moistureAvg = 0; // Reset the value after printing
      }
      if(cmd.equals("GSO")) {
-        sprinkler = startSprinkler(force);
-        switch(sprinkler) {
-          case 1: Serial.println("T3:");
-                  delay(5);
-                  break;
-          case 2: Serial.println("F7:");
-                  delay(5);
-                  break;
-          case 3: Serial.println("F3:");
-                  delay(5);
-                  break;
-          default:Serial.println("Error");
-        }
+        startSprinkler();
+        Serial.println("T3:");
      }
      if(cmd.equals("GSF")) {
-        force = true;
-        sprinkler = startSprinkler(force);
-        if(sprinkler == 4) {
-          Serial.println("T6:");
-          delay(5);
-        }
+        stopSprinkler();
+        Serial.println("T6:");
+        
      }
      cmdAvailable = false;
   }// if command available
@@ -129,6 +113,47 @@ int moistureSampler() {
     sum += analogRead(analogPin);
     delay(1);
   }
+  if(sum < 200)
+    println("F6:");
   return sum / 25;
+}
+
+
+// Sprinkler controller function
+void startSprinkler() {
+  int moisture = moistureSampler();
+  if(moisture > warningMoistureContent) {
+    Serial.println("F3:");
+    return; 
+  }
+  horizontalServo.write(potPosition);  // setting the servo to the position of the flower
+  delay(500); //waiting the servo go to right position
+  digitalWrite(pumpAnodePin, HIGH);  //the pump shall start working
+  digitalWrite(pumpCathodePin, LOW);
+  for(int nos = 1; nos <= 10; nos += 1) {
+    
+    for(int pos = servoPosition - 10; pos <= servoPosition + 10; pos += 1) {
+      servo1.write(pos);
+      delay(wateringTime);
+    }
+    
+    for(int pos = servoPosition + 10; pos >= servoPosition - 10; pos -= 1) {
+      servo1.write(pos);
+      delay(wateringTime);
+    }
+    
+  }
+  digitalWrite(pumpAnodePin, LOW); // Switch off the pump
+  digitalWrite(pumpCathodePin, LOW);
+  delay(500);
+  initPosition(); // Come back to start position
+
+}
+
+void stopSprinkler() {
+  digitalWrite(pumpAnodePin, LOW);
+  digitalWrite(pumpCathodePin, LOW);
+  delay(500);
+  initPosition();
 }
 
