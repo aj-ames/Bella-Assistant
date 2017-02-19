@@ -40,7 +40,6 @@
  
 void setup() {
   Serial.begin(9600);
-  Serial.print("Connection to Bella Established");
   Serial1.begin(9600); //Slave HC-05 to connect to phone
   Serial2.begin(9600); //Master HC-05 to connect to Arduino Uno 1
   Serial3.begin(9600); //Master HC-05 to connect to Arduino Uno 2
@@ -69,8 +68,9 @@ void loop() {
     if(str.equals("RL1O") || str.equals("RL1F")|| str.equals("RL2O") || str.equals("RL2F"))
     {
       Serial2.print(str);
+      Serial2.println(":");
       delay(10);
-      str == "";
+      str = "";
             
       //Receiving Confirmation from Node 1 for lights
       while(Serial2.available() > 0)
@@ -81,7 +81,7 @@ void loop() {
         else
         {
           str += ch;
-          delay(2);
+          delay(5);
         }
       }
       delay(1);
@@ -91,7 +91,7 @@ void loop() {
       //Sending back to Bella
       Serial1.print(str);
       delay(10);
-      str == "";
+      str = "";
     }
 
     //Pushing command to node 1 for lights
@@ -99,7 +99,7 @@ void loop() {
     {
       Serial2.print(str);
       delay(10);
-      str == "";
+      str = "";
 
       //Receiving status of lights
       while(Serial2.available() > 0)
@@ -122,7 +122,7 @@ void loop() {
     {
       Serial2.print(str);
       delay(10);
-      str == "";
+      str = "";
       
       //Receiving values of items
       while(Serial2.available() > 0)

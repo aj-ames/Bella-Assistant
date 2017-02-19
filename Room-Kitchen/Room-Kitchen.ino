@@ -23,8 +23,8 @@
 #define ep3 7
 
 //Flags to maintain status of lights
-int flag1 = 0;
-int flag2 = 0;
+boolean flag1 = false;
+boolean flag2 = false;
 
 
 String str = ""; //Variable to accumulate command
@@ -45,7 +45,7 @@ void setup() {
   //Beginning serial at 9600 baud
   Serial.begin(9600);
   // Connection established and working!
-  //Serial.println("Wassup, Bella?"); 
+  Serial.println("Wassup, Bella?"); 
   
   //Setting relay pins as Output
   pinMode(light1, OUTPUT);       
@@ -77,8 +77,9 @@ void loop() {
         str += ch;
       }
       delay(5);
+      delay(5);
     }
-       // Serial.println(str);
+       Serial.println(str);
     delay(1000);
   }// if serial available
     if(cmdAvailable) {
@@ -91,7 +92,8 @@ void loop() {
           }
           else {
             Serial.println("T1:");
-            flag1 = 1; // Change flag status
+            delay(10);
+            flag1 = true; // Change flag status
             //Relay Instruction
             digitalWrite(light1,LOW);          
            // Serial.println("Light ON");
@@ -109,7 +111,7 @@ void loop() {
           else {
             Serial.println("F4:");
             delay(10);
-            flag1 = 0;
+            flag1 = false;
             //Relay Instruction
             digitalWrite(light1,HIGH);          
             Serial.println("Light OFF");
@@ -128,7 +130,7 @@ void loop() {
           else {
             Serial.println("T2:");
             delay(10);
-            flag2 = 1;
+            flag2 = true;
             //Relay Instruction
             digitalWrite(light2,LOW);          
             Serial.println("Light ON");
@@ -146,7 +148,7 @@ void loop() {
           else {
             Serial.println("T5:");
             delay(10);
-            flag2 = 0;
+            flag2 = false;
             //Relay Instruction
             digitalWrite(light2,HIGH);          
             Serial.println("Light OFF");
@@ -256,7 +258,7 @@ void loop() {
         }
         cmdAvailable = false; // For next iteration
         str=""; // Empty the string for next command
-        //cmdOK ? Serial.println("Command executed") : Serial.println("Error: wrong command issued"); // Command execution prompt
+        cmdOK ? Serial.println("Command executed") : Serial.println("Error: wrong command issued"); // Command execution prompt
 
         
       
