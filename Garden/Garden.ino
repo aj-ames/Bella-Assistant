@@ -120,7 +120,7 @@ int moistureSampler() {
     delay(1);
   }
   if(sum < 200)
-    println("F6:");
+    Serial.println("F6:");
   return sum / 25;
 }
 
@@ -132,18 +132,18 @@ void startSprinkler() {
     Serial.println("F3:");
     return; 
   }
-  horizontalServo.write(potPosition);  // setting the servo to the position of the flower
+  servo1.write(potPosition);  // setting the servo to the position of the flower
   delay(500); //waiting the servo go to right position
   digitalWrite(pumpAnodePin, HIGH);  //the pump shall start working
   digitalWrite(pumpCathodePin, LOW);
   for(int nos = 1; nos <= 10; nos += 1) {
     
-    for(int pos = servoPosition - 10; pos <= servoPosition + 10; pos += 1) {
+    for(int pos = potPosition - 10; pos <= potPosition + 10; pos += 1) {
       servo1.write(pos);
       delay(wateringTime);
     }
     
-    for(int pos = servoPosition + 10; pos >= servoPosition - 10; pos -= 1) {
+    for(int pos = potPosition + 10; pos >= potPosition - 10; pos -= 1) {
       servo1.write(pos);
       delay(wateringTime);
     }
@@ -162,4 +162,4 @@ void stopSprinkler() {
   delay(500);
   initPosition();
 }
-n
+
