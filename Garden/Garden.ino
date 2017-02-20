@@ -1,28 +1,28 @@
 /* 
+ *  
  *  Code for the Arduino which will control the garden's automatic watering system
  *  This will receive the commands from the Arduino mega, the main controller
  *  Command list:
  *  GSS - Garden status; return the moisture
- *  GSO - Garden sprinkler ON
- *  GSF - Garden sprinklerforced to turn ON (will  work only for 10 seconds)
+ *  GSO - Garden sprinkler turned ON
+ *  GSF - Garden sprinkler turned OFF
  *  All the commands will have a delimiter at the end of the command, the delimiter being ":" 
  *  Acknowlegdement sent:
  *  T3 - Turned ON the sprinkler
- *  T6 - Turned ON the sprinkler forcefully
- *  F3 - Sprinklers already turned ON, working currently
- *  F7 - Warning: the soil is too wet to be watered
+ *  T6 - Turned OFF the sprinkler forcefully
+ *  F3 - Warning: the soil is too wet to be watered
+ *  F6 - Remind the user that he/she has to water his/her plants; through Bella
+ *  F7 - The sprinkler is already turned off
  *  M1XY - Moisture content when status is asked for; where XY is the %
  *  
- *  The sprinkler flags:
- *  Throught the program we will mantain a flag variable called 'sprinkler'; this is just to maintain the exit status of the function 'startSprinkler()'
- *  The value of the flag can be as follows: 1, 2, 3, 4
- *  1 - The sprinkler was turned ON; for command GSO
- *  2 - The sprinkler was NOT turned ON because, the water is too wet; for command GSO
- *  3 - The sprinklers are working, for command GSO
- *  4 - The sprinkler was forced to turn ON; will work only for a period of 10 seconds, for command GSF
  */
 
 #include<Servo.h>
+
+#define potPosition 60
+#define wateringTime 40
+#define triggerMiostureContent 200
+#define warningMoistureContent 950
 
 
 Servo servo1; // Servo object to control the servo
@@ -44,11 +44,10 @@ const int ledPin = 13; // pin that turns on the LED
 
 //Command variables
 String cmd = "";
-char ch = '';
+String ch = "";
 boolean cmdAvailable = false;
-char delimiter = ':';
-int sprinkler = 0;
-boolean force = false; // Force start the motor
+String delimiter = ":";
+boolean sprinkler = false; // Flag 
 
 
  void setup() {
@@ -87,36 +86,26 @@ void loop() {
   }
   Serial.println(cmd);
   if(cmdAvailable) {
-     if(cmd.equals("GSS") {
+     if(cmd.equals("GSS")) {
         moistureAvg = moistureSampler();
         moistureAvg = (moistureAvg / 1024) * 100; // Calculate the percentage, for dear Bella *_*
         delay(1000); //Just hold on a sec...
-        Serial.print("M1");
-        Serial.println(moistureAvg);
-        moistureAvg = 0; // Reset the value after printing
+        if(moistureAvg < 10) {
+          Serial.print("M10");
+          Serial.println(moistureAvg);
+        }
+        else {
+         Serial.print("M1");
+         Serial.println(moistureAvg);
+         moistureAvg = 0; // Reset the value after printing 
+        }
      }
      if(cmd.equals("GSO")) {
-        sprinkler = startSprinkler(force);
-        switch(sprinkler) {
-          case 1: Serial.println("T3:");
-                  delay(5);
-                  break;
-          case 2: Serial.println("F7:");
-                  delay(5);
-                  break;
-          case 3: Serial.println("F3:");
-                  delay(5);
-                  break;
-          default:Serial.println("Error");
-        }
+        startSprinkler();
+        Serial.println("T3:");
      }
      if(cmd.equals("GSF")) {
-        force = true;
-        sprinkler = startSprinkler(force);
-        if(sprinkler == 4) {
-          Serial.println("T6:");
-          delay(5);
-        }
+        sprinkler ? stopSprinkler() : fail();
      }
      cmdAvailable = false;
   }// if command available
@@ -129,6 +118,54 @@ int moistureSampler() {
     sum += analogRead(analogPin);
     delay(1);
   }
+  if(sum < 200)
+    Serial.println("F6:");
   return sum / 25;
+}
+
+
+// Sprinkler controller function
+void startSprinkler() {
+  digitalWrite(ledPin, HIGH); // The light is ON while the plants are being watered 
+  int moisture = moistureSampler();
+  if(moisture > warningMoistureContent) {
+    Serial.println("F3:");
+    return; 
+  }
+  servo1.write(potPosition);  // setting the servo to the position of the flower
+  delay(500); //waiting the servo go to right position
+  digitalWrite(pumpAnodePin, HIGH);  //the pump shall start working
+  digitalWrite(pumpCathodePin, LOW);
+  for(int nos = 1; nos <= 10; nos += 1) {
+    
+    for(int pos = potPosition - 10; pos <= potPosition + 10; pos += 1) {
+      servo1.write(pos);
+      delay(wateringTime);
+    }
+    
+    for(int pos = potPosition + 10; pos >= potPosition - 10; pos -= 1) {
+      servo1.write(pos);
+      delay(wateringTime);
+    }
+    
+  }
+  digitalWrite(pumpAnodePin, LOW); // Switch off the pump
+  digitalWrite(pumpCathodePin, LOW);
+  delay(500);
+  initPosition(); // Come back to start position
+  digitalWrite(ledPin, LOW); // Switch OFF the light when watering is done
+}
+
+void stopSprinkler() {
+  digitalWrite(pumpAnodePin, LOW);
+  digitalWrite(pumpCathodePin, LOW);
+  delay(500);
+  Serial.println("T6:");
+  digitalWrite(ledPin, LOW); // This will switch the light OFF
+  initPosition();
+}
+
+void fail() {
+  Serial.println("T6:");
 }
 
