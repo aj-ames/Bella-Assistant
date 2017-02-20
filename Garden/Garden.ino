@@ -126,6 +126,7 @@ int moistureSampler() {
 
 // Sprinkler controller function
 void startSprinkler() {
+  digitalWrite(ledPin, HIGH); // The light is ON while the plants are being watered 
   int moisture = moistureSampler();
   if(moisture > warningMoistureContent) {
     Serial.println("F3:");
@@ -152,7 +153,7 @@ void startSprinkler() {
   digitalWrite(pumpCathodePin, LOW);
   delay(500);
   initPosition(); // Come back to start position
-
+  digitalWrite(ledPin, LOW); // Switch OFF the light when watering is done
 }
 
 void stopSprinkler() {
@@ -160,6 +161,7 @@ void stopSprinkler() {
   digitalWrite(pumpCathodePin, LOW);
   delay(500);
   Serial.println("T6:");
+  digitalWrite(ledPin, LOW); // This will switch the light OFF
   initPosition();
 }
 
