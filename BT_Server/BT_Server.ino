@@ -38,7 +38,7 @@
  
  int item1,item2,item3; //Variables to receive food inventory
 
- boolean cmdAvailable = false; 
+ boolean cmdAvailable = false; //flag to check availability of command
  
 void setup() {
   Serial.begin(9600);
@@ -69,6 +69,9 @@ void loop() {
         Serial.println(str);
     }
 
+    //Checking different command conditions
+
+    //Commands related to room
     if(str.equals("RL1O:") || str.equals("RL1F:") || str.equals("RL2O:") || str.equals("RL2F:") ) {
         if(cmdAvailable) {  
           Serial2.println(str);
@@ -90,11 +93,14 @@ void loop() {
                 }
             }
             Serial.println(str2);
+            delay(10);
+            //Sending to Bella
             Serial1.println(str2);
             delay(500);
         }
     }
 
+    //Command to receive room status
     if(str.equals("RLS:")) {
         if(cmdAvailable) {   
           Serial2.println(str);
@@ -102,6 +108,7 @@ void loop() {
           cmdAvailable = false;
         }
 
+        //Receiving from Node 1
         if(Serial2.available() > 0) {
             flag1 = 0;
             flag2 = 0;
@@ -111,6 +118,7 @@ void loop() {
                 flag2 = Serial2.read();
                 delay(10);
             }
+            //Sending to Bella
             Serial.println(flag1);
             delay(10);
             Serial.println(flag2);
@@ -122,6 +130,7 @@ void loop() {
         }
     }
 
+    //Command to recevive Kitchen Status
     if(str.equals("KS:")) {
         if(cmdAvailable) {
             Serial2.print(str);
@@ -129,6 +138,7 @@ void loop() {
             cmdAvailable = false;
         }
 
+        //Receiving from Node 1
         if(Serial2.available() > 0) {
             item1 = 0;
             item2 = 0;
@@ -141,7 +151,7 @@ void loop() {
                 item3 = Serial2.read();
                 delay(10);
             }
-
+            //Sending to Bella
             Serial.println(item1);
             delay(10);
             Serial.println(item2);
@@ -156,5 +166,7 @@ void loop() {
             delay(10);
         }
     }
+
+    //NEED TO ADD GARDEN FUNCTIONALITY
 }//End of loop
 
