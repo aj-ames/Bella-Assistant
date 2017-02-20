@@ -30,13 +30,15 @@
  *  Make sure to set the board as "Arduino/Genuino Mega 2560" before compiling.
  */
 
- String str = ""; //Variable to accumulate command
+ String str = "", str2 = ""; //Variable to accumulate command
  
  char ch = ' '; //Variable to receive each character
  
  int flag1,flag2; //Variables to receive lights status
  
  int item1,item2,item3; //Variables to receive food inventory
+
+ boolean cmdAvailable = false; 
  
 void setup() {
   Serial.begin(9600);
@@ -45,106 +47,114 @@ void setup() {
   Serial3.begin(9600); //Master HC-05 to connect to Arduino Uno 2
 }
 
+
+
 void loop() {
-    //Receiving Command from Bella
-    while(Serial1.available() > 0)
-    {                    
-      ch = Serial1.read();    
-      if(ch == ':')
-        break;
-      else
-      {
-       str += ch;
-       delay(2);
-      }    
-      delay(10);
-    }
-    delay(10);
-    Serial.println(str);
-    delay(50);
-    //Pushing commands to different nodes
-
-    //Pushing commands to node 1 for lights
-    if(str.equals("RL1O") || str.equals("RL1F")|| str.equals("RL2O") || str.equals("RL2F"))
-    {
-      Serial2.print(str);
-      Serial2.println(":");
-      delay(10);
+  //Receviving Command from Bella
+    if(Serial1.available() > 0) {
       str = "";
-            
-      //Receiving Confirmation from Node 1 for lights
-      while(Serial2.available() > 0)
-      {
-        ch = Serial2.read();
-        if(ch == ':')
-          break;
-        else
-        {
-          str += ch;
+        while(Serial1.available()) { 
+          ch = Serial1.read();
           delay(5);
+          if(ch == ':') {
+              cmdAvailable = true;
+              str += ch;
+              break;
+          }
+          else {
+              str += ch;
+          }
+          delay(500);
         }
-      }
-      delay(1);
-      Serial.println(str);
-      delay(50);
-      
-      //Sending back to Bella
-      Serial1.print(str);
-      delay(10);
-      str = "";
+        Serial.println(str);
     }
 
-    //Pushing command to node 1 for lights
-    else if(str.equals("RLS"))
-    {
-      Serial2.print(str);
-      delay(10);
-      str = "";
-
-      //Receiving status of lights
-      while(Serial2.available() > 0)
-      {
-        flag1 == Serial2.read();
-        delay(1);
-        flag2 == Serial2.read();
-        delay(1);
-      }
-      
-      //Sending back to Bella
-      Serial1.print(flag1);
-      delay(10);
-      Serial1.print(flag2);
-      delay(10);
+    if(str.equals("RL1O:") || str.equals("RL1F:") || str.equals("RL2O:") || str.equals("RL2F:") ) {
+        if(cmdAvailable) {  
+          Serial2.println(str);
+          delay(10);
+          cmdAvailable = false;
+        }
+        
+        if(Serial2.available() > 0) {        
+            str2 = "";
+            while(Serial2.available()) {
+                ch = Serial2.read();
+                delay(5);
+                if(ch == ':') {
+                    str2 += ch;
+                    break;
+                }
+                else {
+                    str2 += ch;
+                }
+            }
+            Serial.println(str2);
+            Serial1.println(str2);
+            delay(500);
+        }
     }
 
-    //Pushing Command to Node 1 for Kitchen Status
-    else if(str.equals("KS"))
-    {
-      Serial2.print(str);
-      delay(10);
-      str = "";
-      
-      //Receiving values of items
-      while(Serial2.available() > 0)
-      {
-        item1 = Serial2.read();
-        delay(10);
-        item2 = Serial2.read();
-        delay(10);
-        item3 = Serial2.read();
-        delay(10);
-      }
+    if(str.equals("RLS:")) {
+        if(cmdAvailable) {   
+          Serial2.println(str);
+          delay(10);
+          cmdAvailable = false;
+        }
 
-      //Sending back to Bella
-      Serial1.print(item1);
-      delay(10);
-      Serial1.print(item2);
-      delay(10);
-      Serial1.print(item3);
-      delay(10);
+        if(Serial2.available() > 0) {
+            flag1 = 0;
+            flag2 = 0;
+            while(Serial2.available()) {
+                flag1 = Serial2.read();
+                delay(10);
+                flag2 = Serial2.read();
+                delay(10);
+            }
+            Serial.println(flag1);
+            delay(10);
+            Serial.println(flag2);
+            delay(10);
+            Serial1.println(flag1);
+            delay(10);
+            Serial1.println(flag2);
+            delay(10);
+        }
     }
-    else
-      return;
 
-     //STILL NEED TO ADD GARDEN FUNCTIONALITY
-}          
+    if(str.equals("KS:")) {
+        if(cmdAvailable) {
+            Serial2.print(str);
+            delay(10);
+            cmdAvailable = false;
+        }
+
+        if(Serial2.available() > 0) {
+            item1 = 0;
+            item2 = 0;
+            item3 = 0;
+            while(Serial.available()) {
+                item1 = Serial2.read();
+                delay(10);
+                item2 = Serial2.read();
+                delay(10);
+                item3 = Serial2.read();
+                delay(10);
+            }
+
+            Serial.println(item1);
+            delay(10);
+            Serial.println(item2);
+            delay(10);
+            Serial.println(item3);
+            delay(10);
+            Serial1.println(item1);
+            delay(10);
+            Serial1.println(item2);
+            delay(10);
+            Serial1.println(item3);
+            delay(10);
+        }
+    }
+}//End of loop
+
