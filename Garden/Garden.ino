@@ -12,6 +12,7 @@
  *  T6 - Turned OFF the sprinkler forcefully
  *  F3 - Warning: the soil is too wet to be watered
  *  F6 - Remind the user that he/she has to water his/her plants; through Bella
+ *  F7 - The sprinkler is already turned off
  *  M1XY - Moisture content when status is asked for; where XY is the %
  *  
  */
@@ -43,10 +44,10 @@ const int ledPin = 13; // pin that turns on the LED
 
 //Command variables
 String cmd = "";
-char ch = "";
+String ch = "";
 boolean cmdAvailable = false;
-char delimiter = ':';
-boolean force = false; // Force start the motor
+String delimiter = ":";
+boolean sprinkler = false; // Flag 
 
 
  void setup() {
@@ -104,9 +105,7 @@ void loop() {
         Serial.println("T3:");
      }
      if(cmd.equals("GSF")) {
-        stopSprinkler();
-        Serial.println("T6:");
-        
+        sprinkler ? stopSprinkler() : fail();
      }
      cmdAvailable = false;
   }// if command available
@@ -160,6 +159,11 @@ void stopSprinkler() {
   digitalWrite(pumpAnodePin, LOW);
   digitalWrite(pumpCathodePin, LOW);
   delay(500);
+  Serial.println("T6:");
   initPosition();
+}
+
+void fail() {
+  Serial.println("T6:");
 }
 
