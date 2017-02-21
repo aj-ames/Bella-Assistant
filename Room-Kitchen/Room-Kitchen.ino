@@ -190,7 +190,7 @@ void loop() {
           //calculate percentage
           p1=(cm1/len)*100;
   
-          Serial.println(p1);
+          //Serial.println(p1);
           //Serial.print("cm");
           //Serial.println();
   
@@ -217,9 +217,9 @@ void loop() {
           //calculate percentage
           p2=(cm2/len)*100;
   
-          Serial.println(p2);
-    //Serial.print("cm");
-    //Serial.println();
+          //Serial.println(p2);
+          //Serial.print("cm");
+          //Serial.println();
   
           delay(100);
 
@@ -243,13 +243,23 @@ void loop() {
           //calculate percentage
           p3=(cm3/len)*100;
           
+          //Serial.println(p3);
+          //Serial.print("cm");
+          //Serial.println();
+          // Send the recorded information
+          Serial.print("C1");
+          Serial.println(p1);
+          delay(10);
+          Serial.print("C2");
+          Serial.println(p2);
+          delay(10);
+          Serial.print("C3");
           Serial.println(p3);
-    //Serial.print("cm");
-    //Serial.println();
+          delay(10);
+          
   
           delay(100);
           cmdOK = true;
-             
         }
           // Get garden status (tentative code)
           if(str.equals("GSS")) {
