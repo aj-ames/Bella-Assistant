@@ -36,7 +36,7 @@
  
  int flag1,flag2; //Variables to receive lights status
  
- int item1,item2,item3; //Variables to receive food inventory
+ String item1,item2,item3; //Variables to receive food inventory
 
  boolean cmdAvailable = false; //flag to check availability of command
  
@@ -91,6 +91,7 @@ void loop() {
                 else {
                     str2 += ch;
                 }
+                delay(5);
             }
             Serial.println(str2);
             delay(10);
@@ -140,9 +141,9 @@ void loop() {
 
         //Receiving from Node 1
         if(Serial2.available() > 0) {
-            item1 = 0;
-            item2 = 0;
-            item3 = 0;
+            item1 = "";
+            item2 = "";
+            item3 = "";
             while(Serial.available()) {
                 item1 = Serial2.read();
                 delay(10);
