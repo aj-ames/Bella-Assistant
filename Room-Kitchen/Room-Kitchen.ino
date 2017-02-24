@@ -171,11 +171,9 @@ void loop() {
           int p1,p2,p3; //To calculate percentage of grocery
   
           digitalWrite(tp1, LOW); //low pulse first to ensure a clean high pulse.
-          delayMicroseconds(2);
-  
+          delayMicroseconds(2);  
           digitalWrite(tp1, HIGH);
           delayMicroseconds(10);
-  
           digitalWrite(tp1, LOW);
 
          // Read the signal from the sensor: a HIGH pulse whose
@@ -183,26 +181,16 @@ void loop() {
         // of the ping to the reception of its echo off of an object.
   
           d1 = pulseIn(ep1, HIGH);
-
           // convert the time into a distance
           cm1 = microToCms(d1);
-
           //calculate percentage
           p1=(cm1/len)*100;
-  
-          //Serial.println(p1);
-          //Serial.print("cm");
-          //Serial.println();
-  
           delay(100);
 
-    
           digitalWrite(tp2, LOW); //low pulse first to ensure a clean high pulse.
-          delayMicroseconds(2);
-  
+          delayMicroseconds(2);  
           digitalWrite(tp2, HIGH);
           delayMicroseconds(10);
-  
           digitalWrite(tp2, LOW);
 
     // Read the signal from the sensor: a HIGH pulse whose
@@ -213,22 +201,13 @@ void loop() {
 
     // convert the time into a distance
           cm2 = microToCms(d2);
-
           //calculate percentage
           p2=(cm2/len)*100;
-  
-          //Serial.println(p2);
-          //Serial.print("cm");
-          //Serial.println();
-  
           delay(100);
-
           digitalWrite(tp3, LOW); //low pulse first to ensure a clean high pulse.
           delayMicroseconds(2);
-  
           digitalWrite(tp3, HIGH);
           delayMicroseconds(10);
-  
           digitalWrite(tp3, LOW);
 
     // Read the signal from the sensor: a HIGH pulse whose
@@ -236,16 +215,11 @@ void loop() {
     // of the ping to the reception of its echo off of an object.
   
           d3 = pulseIn(ep3, HIGH);
-
     // convert the time into a distance
           cm3 = microToCms(d3);
-
           //calculate percentage
           p3=(cm3/len)*100;
-          
-          //Serial.println(p3);
-          //Serial.print("cm");
-          //Serial.println();
+
           // Send the recorded information
           Serial.print("C1");
           Serial.println(p1);
@@ -258,7 +232,7 @@ void loop() {
           delay(10);
           
   
-          delay(100);
+          delay(10);
           cmdOK = true;
         }
           // Get garden status (tentative code)
@@ -268,7 +242,7 @@ void loop() {
         }
         cmdAvailable = false; // For next iteration
         str=""; // Empty the string for next command
-        cmdOK ? Serial.println("Command executed") : Serial.println("Error: wrong command issued"); // Command execution prompt
+       // cmdOK ? Serial.println("Command executed") : Serial.println("Error: wrong command issued"); // Command execution prompt
 
         
       
