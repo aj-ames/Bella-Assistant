@@ -169,9 +169,9 @@ void loop() {
     }
 
     //Garden
-     if(str.equals("RL1O:") || str.equals("RL1F:") || str.equals("RL2O:") || str.equals("RL2F:") ) {
+     if( str.equals("GSS:") || str.equals("GSO") || str.equals("GSF:") ) {
         if(cmdAvailable) {  
-          Serial2.println(str);
+          Serial3.println(str);
           delay(10);
           cmdAvailable = false;
         }
