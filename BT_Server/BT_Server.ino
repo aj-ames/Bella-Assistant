@@ -171,15 +171,15 @@ void loop() {
     //Garden
      if( str.equals("GSS:") || str.equals("GSO") || str.equals("GSF:") ) {
         if(cmdAvailable) {  
-          Serial2.println(str);
+          Serial3.println(str);
           delay(10);
           cmdAvailable = false;
         }
         
-        if(Serial2.available() > 0) {        
+        if(Serial3.available() > 0) {        
             garden_cmd = "";
-            while(Serial2.available()) {
-                ch = Serial2.read();
+            while(Serial3.available()) {
+                ch = Serial3.read();
                 delay(5);
                 if(ch == ':') {
                     garden_cmd += ch;
