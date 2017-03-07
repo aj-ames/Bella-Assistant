@@ -16,14 +16,14 @@
  *  T - Room Light Turned On/Off
  *  
  *  To be sent to Arduino Uno 2:
- *  GSO - Garden Sprinker On
- *  GSF - Garden Sprinkler Off
- *  GS - Garden Moisture Status
+ *  GSS - Garden status; return the moisture
+ *  GSO - Garden sprinkler turned ON
+ *  GSF - Garden sprinkler turned OFF
  *  
  *  Serial0 is used to view on Serial Monitor
- *  Serial1 is used for Phone-Server Connection
- *  Serial2 is used for Server-Node1 Connection
- *  Serial3 is used for Server-Node2 Connection
+ *  Serial1 is used for Phone-Server Connection; The phone
+ *  Serial2 is used for Server-Node1 Connection; The Room and Kitchen
+ *  Serial3 is used for Server-Node2 Connection; The Garden
  *  
  *  P.S. All commands are followed by ':' character to mark Command Termination
  *  
@@ -168,6 +168,35 @@ void loop() {
         }
     }
 
-    //NEED TO ADD GARDEN FUNCTIONALITY
+    //Garden
+     if(str.equals("RL1O:") || str.equals("RL1F:") || str.equals("RL2O:") || str.equals("RL2F:") ) {
+        if(cmdAvailable) {  
+          Serial2.println(str);
+          delay(10);
+          cmdAvailable = false;
+        }
+        
+        if(Serial2.available() > 0) {        
+            str2 = "";
+            while(Serial2.available()) {
+                ch = Serial2.read();
+                delay(5);
+                if(ch == ':') {
+                    str2 += ch;
+                    break;
+                }
+                else {
+                    str2 += ch;
+                }
+                delay(5);
+            }
+            Serial.println(str2);
+            delay(10);
+            //Sending to Bella
+            Serial1.println(str2);
+            delay(500);
+        }
+    }
+    
 }//End of loop
 
