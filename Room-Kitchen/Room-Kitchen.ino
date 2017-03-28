@@ -104,12 +104,12 @@ void loop() {
         //Turn off Room Light 1 
         if(str.equals("RL1F")) {
           if(!flag1) { //light 1 is already off
-            Serial.println("T4:");
+            Serial.println("F4:");
             delay(10);
             cmdOK = true;
           }
           else {
-            Serial.println("F4:");
+            Serial.println("T4:");
             delay(10);
             flag1 = false;
             //Relay Instruction
@@ -139,7 +139,7 @@ void loop() {
           }
         }
         //Turn off Room Light 2 
-        if(str.equals("RL2F:")) {
+        if(str.equals("RL2F")) {
           if(!flag2) {       //light 2 is already off
             Serial.println("F5");
             delay(10);
@@ -156,7 +156,7 @@ void loop() {
             cmdOK = true;
           }
         }
-        if(str.equals("RLS:")) {
+        if(str.equals("RLS")) {
           Serial.println(flag1);
           delay(10);
           Serial.println(flag2);
@@ -165,7 +165,7 @@ void loop() {
         }
 
         // Get the Kitchen Status
-        if(str == "KS:") {
+        if(str == "KS") {
           long d1,d2,d3,cm1,cm2,cm3;
           int len = 100; //Length of Box. Assumed value for now. Update after boxes are obtained
           int p1,p2,p3; //To calculate percentage of grocery
