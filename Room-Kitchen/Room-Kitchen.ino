@@ -256,11 +256,7 @@ void loop() {
           delay(10);
           cmdOK = true;
         }
-          // Get garden status (tentative code)
-          if(str.equals("GSS")) {
-          Serial.println("C341:");
-          cmdOK = true;
-        }
+        
         cmdAvailable = false; // For next iteration
         str=""; // Empty the string for next command
        // cmdOK ? Serial.println("Command executed") : Serial.println("Error: wrong command issued"); // Command execution prompt
