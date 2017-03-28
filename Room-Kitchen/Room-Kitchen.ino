@@ -221,17 +221,38 @@ void loop() {
           p3=(cm3/len)*100;
 
           // Send the recorded information
-          Serial.print("C1");
-          Serial.println(p1);
-          delay(10);
-          Serial.print("C2");
-          Serial.println(p2);
-          delay(10);
-          Serial.print("C3");
-          Serial.println(p3);
-          delay(10);
+          if(p1 < 10) {
+            Serial.print("C10");
+            Serial.print(p1);
+            delay(10);
+          }
+          else {
+            Serial.print("C1");
+            Serial.println(p1);
+            delay(10);  
+          }
           
-  
+          if(p1 < 10) {
+            Serial.print("C10");
+            Serial.print(p1);
+            delay(10);
+          }
+          else {
+            Serial.print("C2");
+            Serial.println(p2);
+            delay(10);  
+          }
+          
+          if(p1 < 10) {
+            Serial.print("C10");
+            Serial.print(p1);
+            delay(10);
+          }
+          else {
+            Serial.print("C3");
+            Serial.println(p3);
+            delay(10);
+          }
           delay(10);
           cmdOK = true;
         }
