@@ -104,7 +104,7 @@ void setup() {
         moistureAvg = (moistureAvg / 1024) * 100; // Calculate the percentage, for dear Bella *_*
         moistureAvg = moistureAvg - 100; //To reverse the value
         delay(100); //Just hold on a sec...
-        if(moistureAvg >=80) {
+        if(moistureAvg >= 80) {
           Serial.print("F3:");//Soil is too wet to be watered
         }
         else  {
