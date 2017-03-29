@@ -22,15 +22,12 @@
 #define wateringTime 40
 #define triggerMiostureContent 200
 #define warningMoistureContent 750
-#define motorPin1 2
-#define motorPin2 3
-#define motorEn 6
 
 //Servo Object to control the servo motor
-Servo servo;
+Servo servo1;
 
-// Define the pin
-const int analogPin = A0;
+// Define the pin for moisture sensor
+const int moisturePin = A0;
 
 //The value that which will be read from the moisture sensor
 int moistureValue = 0;
@@ -38,6 +35,10 @@ int moistureValue = 0;
 //The average moisture value
 long int moistureAvg = 0;
 
+//Pins to use the Sprinkler Motor
+const int motorPin1 = 2;
+const int motorPin2 = 3;
+const int motorEn = 6;
 
 //The Arduino's LED pin
 const int ledPin = 13; // pin that turns on the LED
@@ -53,14 +54,18 @@ boolean sprinkler = false; // Flag
 void setup() {
    //Beginning Serial at 9600 Buad
    Serial.begin(9600);
+   
    //Message displayed on succesfull connection
    Serial.println("Connection is up!");
-   servo.attach(12);  // attaches the servo on pin 10 to the servo object 
+   
+   servo1.attach(8);  // attaches the servo on pin 8 to the servo object 
    initPosition();
    delay(500);
+   
    pinMode(motorPin1, OUTPUT);
    pinMode(motorPin2, OUTPUT);
    pinMode(motorEn, OUTPUT);
+   pinMode(moisturePin, INPUT);
  }
 
 
@@ -82,6 +87,7 @@ void setup() {
      if(cmd.equals("GSS")) {
         moistureAvg = moistureSampler();
         moistureAvg = (moistureAvg / 1024) * 100; // Calculate the percentage, for dear Bella *_*
+        moistureAvg = moistureAvg - 100; //To reverse the value
         delay(100); //Just hold on a sec...
         if(moistureAvg < 10) {
           Serial.print("M10");
@@ -94,62 +100,54 @@ void setup() {
         }
      }
      if(cmd.equals("GSO")) {
-        startSprinkler();
-        Serial.println("T3:");
+        moistureAvg = moistureSampler();
+        moistureAvg = (moistureAvg / 1024) * 100; // Calculate the percentage, for dear Bella *_*
+        moistureAvg = moistureAvg - 100; //To reverse the value
+        delay(100); //Just hold on a sec...
+        if(moistureAvg >=80) {
+          Serial.print("F3:");//Soil is too wet to be watered
+        }
+        else  {
+          startSprinkler();
+          Serial.println("T3:");
+          initPosition();
+        }
      }  
      if(cmd.equals("GSF")) {
         fail();
      }
      cmdAvailable = false;
   }// if command available
-  
+
  }
 
 int moistureSampler() {
   int sum = 0;
   for(int i = 0; i < 25; i++) {
-    sum += analogRead(analogPin);
-    delay(1);
+    sum += analogRead(moisturePin);
+    delay(20);
   }
-  if((sum / 25) < 200)
-    Serial.println("F6:");
-  return sum / 25;
+  return (sum / 25);
 }
 
 void startSprinkler() {
-  digitalWrite(ledPin, HIGH); // The light is ON while the plants are being watered 
-  //int moisture = moistureSampler();
-  //if(moisture > warningMoistureContent) {
-    //Serial.println("F3:");
-    //return; 
-  //}
-  servo.write(potPosition);  // setting the servo to the position of the flower
-  delay(500); //waiting the servo go to right position
-  digitalWrite(motorEn, HIGH);
-  digitalWrite(motorPin1, HIGH);
-  digitalWrite(motorPin2, LOW);
-  for(int nos = 1; nos <= 10; nos += 1) {
-    
-    for(int pos = potPosition - 10; pos <= potPosition + 10; pos += 1) {
-      servo.write(pos);
-      digitalWrite(motorEn, HIGH);
-      digitalWrite(motorPin1, HIGH);
-      digitalWrite(motorPin2, LOW);
-      delay(wateringTime);
-    }
-    
-    for(int pos = potPosition + 10; pos >= potPosition - 10; pos -= 1) {
-      servo.write(pos);
-      digitalWrite(motorEn, HIGH);
-      digitalWrite(motorPin1, HIGH);
-      digitalWrite(motorPin2, LOW);
-      delay(wateringTime);
-    }
-    
+  for(int i=0;i<10;i++) {
+    servo1.write(0);// For Position at 0 degrees
+    digitalWrite(motorEn,HIGH);
+    digitalWrite(motorPin1,HIGH);
+    digitalWrite(motorPin2,LOW);
+    delay(5000);
+    servo1.write(90);// For Position at 90 degrees
+    digitalWrite(motorEn,HIGH);
+    digitalWrite(motorPin1,HIGH);
+    digitalWrite(motorPin2,LOW);
+    delay(500);
+    servo1.write(180);// For Position at 180 degrees
+    digitalWrite(motorEn,HIGH);
+    digitalWrite(motorPin1,HIGH);
+    digitalWrite(motorPin2,LOW);
+    delay(500);
   }
-  delay(50);
-  initPosition();
-  digitalWrite(ledPin, LOW);
 }
 
 void fail() {
@@ -158,8 +156,8 @@ void fail() {
 
 
 void initPosition() {
-   servo.write(90); // set the servo to mid-point
-   delay(5);  
+   servo1.write(90); // set the servo to mid-point
+   delay(500);  
  }
 
 
