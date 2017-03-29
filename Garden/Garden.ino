@@ -1,4 +1,4 @@
-/* 
+  /* 
  *  
  *  Code for the Arduino which will control the garden's automatic watering system
  *  This will receive the commands from the Arduino mega, the main controller
