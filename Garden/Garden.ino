@@ -55,7 +55,7 @@ void setup() {
    Serial.begin(9600);
    //Message displayed on succesfull connection
    Serial.println("Connection is up!");
-   servo1.attach(12);  // attaches the servo on pin 10 to the servo object 
+   servo.attach(12);  // attaches the servo on pin 10 to the servo object 
    initPosition();
    delay(500);
    pinMode(motorPin1, OUTPUT);
@@ -63,11 +63,6 @@ void setup() {
    pinMode(motorEn, OUTPUT);
  }
 
-
-void initPosition() {
-   servo.write(90); // set the servo to mid-point
-   delay(500);  
- }
 
  void loop() {
   if(Serial.available() > 0) {
@@ -82,7 +77,7 @@ void initPosition() {
         cmd += ch;
     }
   }
-  Serial.println(cmd);
+  //Serial.println(cmd);
   if(cmdAvailable) {
      if(cmd.equals("GSS")) {
         moistureAvg = moistureSampler();
@@ -123,11 +118,11 @@ int moistureSampler() {
 
 void startSprinkler() {
   digitalWrite(ledPin, HIGH); // The light is ON while the plants are being watered 
-  int moisture = moistureSampler();
-  if(moisture > warningMoistureContent) {
-    Serial.println("F3:");
-    return; 
-  }
+  //int moisture = moistureSampler();
+  //if(moisture > warningMoistureContent) {
+    //Serial.println("F3:");
+    //return; 
+  //}
   servo.write(potPosition);  // setting the servo to the position of the flower
   delay(500); //waiting the servo go to right position
   digitalWrite(motorEn, HIGH);
@@ -161,6 +156,11 @@ void fail() {
   Serial.println("F7:");
 }
 
+
+void initPosition() {
+   servo.write(90); // set the servo to mid-point
+   delay(500);  
+ }
 
 
 
