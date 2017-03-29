@@ -45,7 +45,7 @@ void setup() {
   //Beginning serial at 9600 baud
   Serial.begin(9600);
   // Connection established and working!
-  Serial.println("Wassup, Bella?"); 
+  //Serial.println("Wassup, Bella?"); 
   
   //Setting relay pins as Output
   pinMode(light1, OUTPUT);       
@@ -68,7 +68,7 @@ void loop() {
   if(Serial.available() > 0) {
     while(Serial.available()) {
       ch = Serial.read(); // Read a byte from the Serial buffer
-      delay(5);
+      //delay(5);
       if(ch == ':') {
         cmdAvailable = true;
         break;
@@ -76,28 +76,28 @@ void loop() {
       else { 
         str += ch;
       }
-      delay(5);
-      delay(5);
+      //delay(5);
+      //delay(5);
     }
-       Serial.println(str);
-    delay(1000);
+      // Serial.println(str);
+    //delay(1000);
   }// if serial available
     if(cmdAvailable) {
          //Turn on Room 1 Light 
         if(str.equals("RL1O")) {
           if(flag1) {
             Serial.println("F1:"); // light is already on
-            delay(10);
+            Serial.flush();;
             cmdOK = true;
           }
           else {
             Serial.println("T1:");
-            delay(10);
+            Serial.flush();;
             flag1 = true; // Change flag status
             //Relay Instruction
             digitalWrite(light1,LOW);          
            // Serial.println("Light ON");
-            delay(10);
+            Serial.flush();;
             cmdOK = true;
           }
         }
@@ -105,17 +105,17 @@ void loop() {
         if(str.equals("RL1F")) {
           if(!flag1) { //light 1 is already off
             Serial.println("F4:");
-            delay(10);
+            Serial.flush();;
             cmdOK = true;
           }
           else {
             Serial.println("T4:");
-            delay(10);
+            Serial.flush();;
             flag1 = false;
             //Relay Instruction
             digitalWrite(light1,HIGH);          
-            Serial.println("Light OFF");
-            delay(10);
+           // Serial.println("Light OFF");
+            Serial.flush();;
             cmdOK = true;
           }
         }
@@ -123,18 +123,18 @@ void loop() {
         if(str.equals("RL2O")) {
           if(flag2) {          //light 1 is already on
             Serial.println("F2:");
-            delay(10);
+            Serial.flush();;
             cmdOK = true;
                
           }
           else {
             Serial.println("T2:");
-            delay(10);
+            Serial.flush();;
             flag2 = true;
             //Relay Instruction
             digitalWrite(light2,LOW);          
-            Serial.println("Light ON");
-            delay(10);
+           // Serial.println("Light ON");
+            Serial.flush();;
             cmdOK = true;
           }
         }
@@ -142,25 +142,25 @@ void loop() {
         if(str.equals("RL2F")) {
           if(!flag2) {       //light 2 is already off
             Serial.println("F5");
-            delay(10);
+            Serial.flush();;
             cmdOK = true;
           }
           else {
             Serial.println("T5:");
-            delay(10);
+            Serial.flush();;
             flag2 = false;
             //Relay Instruction
             digitalWrite(light2,HIGH);          
-            Serial.println("Light OFF");
-            delay(10);
+          //  Serial.println("Light OFF");
+            Serial.flush();;
             cmdOK = true;
           }
         }
         if(str.equals("RLS")) {
           Serial.println(flag1);
-          delay(10);
+          Serial.flush();;
           Serial.println(flag2);
-          delay(10);
+          Serial.flush();;
           cmdOK = true;
         }
 
@@ -171,9 +171,9 @@ void loop() {
           int p1,p2,p3; //To calculate percentage of grocery
   
           digitalWrite(tp1, LOW); //low pulse first to ensure a clean high pulse.
-          delayMicroseconds(2);  
+          //delayMicroseconds(2);  
           digitalWrite(tp1, HIGH);
-          delayMicroseconds(10);
+          //delayMicroseconds(10);
           digitalWrite(tp1, LOW);
 
          // Read the signal from the sensor: a HIGH pulse whose
@@ -185,12 +185,12 @@ void loop() {
           cm1 = microToCms(d1);
           //calculate percentage
           p1=(cm1/len)*100;
-          delay(100);
+          //delay(100);
 
           digitalWrite(tp2, LOW); //low pulse first to ensure a clean high pulse.
-          delayMicroseconds(2);  
+          //delayMicroseconds(2);  
           digitalWrite(tp2, HIGH);
-          delayMicroseconds(10);
+          //delayMicroseconds(10);
           digitalWrite(tp2, LOW);
 
     // Read the signal from the sensor: a HIGH pulse whose
@@ -203,11 +203,11 @@ void loop() {
           cm2 = microToCms(d2);
           //calculate percentage
           p2=(cm2/len)*100;
-          delay(100);
+          //delay(100);
           digitalWrite(tp3, LOW); //low pulse first to ensure a clean high pulse.
-          delayMicroseconds(2);
+          //delayMicroseconds(2);
           digitalWrite(tp3, HIGH);
-          delayMicroseconds(10);
+          //delayMicroseconds(10);
           digitalWrite(tp3, LOW);
 
     // Read the signal from the sensor: a HIGH pulse whose
@@ -224,37 +224,53 @@ void loop() {
           if(p1 < 10) {
             Serial.print("C10");
             Serial.print(p1);
-            delay(10);
+            //delay(10);
           }
           else {
             Serial.print("C1");
             Serial.println(p1);
-            delay(10);  
+            //delay(10);  
           }
           
           if(p1 < 10) {
             Serial.print("C10");
             Serial.print(p1);
-            delay(10);
+            //delay(10);
           }
           else {
             Serial.print("C2");
             Serial.println(p2);
-            delay(10);  
+            //delay(10);  
           }
           
           if(p1 < 10) {
             Serial.print("C10");
             Serial.print(p1);
-            delay(10);
+            //delay(10);
           }
           else {
             Serial.print("C3");
             Serial.println(p3);
-            delay(10);
+            //delay(10);
           }
-          delay(10);
+          Serial.flush();
           cmdOK = true;
+        }
+        //Test for a reply
+        if(str.equals("X")) {
+          String sat = "";
+          //Build the sat string
+          if(flag1)
+            sat += "T";
+           else
+            sat += "F";
+           if(flag2) 
+            sat += "T";
+           else
+            sat += "F";
+           sat += "F:";
+           Serial.println(sat);
+           Serial.flush();
         }
         
         cmdAvailable = false; // For next iteration
