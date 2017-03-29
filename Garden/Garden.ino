@@ -159,7 +159,7 @@ void fail() {
 
 void initPosition() {
    servo.write(90); // set the servo to mid-point
-   delay(500);  
+   delay(5);  
  }
 
 
