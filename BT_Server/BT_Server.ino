@@ -64,7 +64,7 @@ void loop() {
           else {
               str += ch;
           }
-          delay(500);
+          delay(5);
         }
         Serial.println(str);
     }
@@ -75,7 +75,7 @@ void loop() {
     if(str.equals("RL1O:") || str.equals("RL1F:") || str.equals("RL2O:") || str.equals("RL2F:") ) {
         if(cmdAvailable) {  
           Serial2.println(str);
-          delay(10);
+          Serial.flush();
           cmdAvailable = false;
         }
         
@@ -94,10 +94,10 @@ void loop() {
                 delay(5);
             }
             Serial.println(str2);
-            delay(10);
+            Serial.flush();
             //Sending to Bella
             Serial1.println(str2);
-            delay(500);
+            Serial1.flush();
         }
     }
 
@@ -105,7 +105,7 @@ void loop() {
     if(str.equals("RLS:")) {
         if(cmdAvailable) {   
           Serial2.println(str);
-          delay(10);
+          Serial2.flush();
           cmdAvailable = false;
         }
 
@@ -121,13 +121,13 @@ void loop() {
             }
             //Sending to Bella
             Serial.println(flag1);
-            delay(10);
+            Serial.flush();
             Serial.println(flag2);
-            delay(10);
+            Serial.flush();
             Serial1.println(flag1);
-            delay(10);
+            Serial1.flush();
             Serial1.println(flag2);
-            delay(10);
+            Serial1.flush();
         }
     }
 
@@ -135,7 +135,7 @@ void loop() {
     if(str.equals("KS:")) {
         if(cmdAvailable) {
             Serial2.print(str);
-            delay(10);
+            Serial2.flush();
             cmdAvailable = false;
         }
 
@@ -154,17 +154,17 @@ void loop() {
             }
             //Sending to Bella
             Serial.println(item1);
-            delay(10);
+            Serial.flush();
             Serial.println(item2);
-            delay(10);
+            Serial.flush();
             Serial.println(item3);
-            delay(10);
+            Serial.flush();
             Serial1.println(item1);
-            delay(10);
+            Serial1.flush();
             Serial1.println(item2);
-            delay(10);
+            Serial1.flush();
             Serial1.println(item3);
-            delay(10);
+            Serial1.flush();
         }
     }
 
@@ -172,7 +172,7 @@ void loop() {
      if( str.equals("GSS:") || str.equals("GSO") || str.equals("GSF:") ) {
         if(cmdAvailable) {  
           Serial3.println(str);
-          delay(10);
+          Serial3.flush();
           cmdAvailable = false;
         }
         
@@ -191,10 +191,10 @@ void loop() {
                 delay(5);
             }
             Serial.println(garden_cmd);
-            delay(10);
+            Serial.flush();
             //Sending to Bella
             Serial1.println(garden_cmd);
-            delay(500);
+            Serial1.flush();
         }
     }
     
