@@ -210,7 +210,6 @@ void loop() {
                 ch = Serial2.read();
                 delay(5);
                 if(ch == ':') {
-                    stat += ch;
                     break;
                 }
                 else {
@@ -218,9 +217,30 @@ void loop() {
                 }
                 delay(5);
             }
+        } 
+        if(cmdAvailable) {
+          Serial3.println(str);
+          Serial3.flush();
+
+          if(Serial3.available() > 0) {
+            while(Serial3.available()) {
+              ch = Serial3.read();
+              delay(5);
+              if(ch == ':') {
+                stat += ch;
+                break;
+              }
+              else {
+                stat += ch;
+              }
+              delay(5);
+            }
+          }
+        }
+        Serial.println(stat);
+        Serial.flush();
+        cmdAvailable = false;
       }
-      
-    }
     
 }//End of loop
 
