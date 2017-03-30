@@ -117,7 +117,12 @@ void setup() {
         fail();
      }
      if(cmd.equals("X")) {
-      return sprinkler;
+      if(sprinkler) {
+        return "T:";
+      }
+      else {
+        return "F:";
+      }
      }
      cmdAvailable = false;
   }// if command available
