@@ -30,7 +30,7 @@
  *  Make sure to set the board as "Arduino/Genuino Mega 2560" before compiling.
  */
 
- String str = "", str2 = "", garden_cmd = ""; //Variable to accumulate command
+ String str = "", str2 = "", garden_cmd = "", stat = ""; //Variable to accumulate command
  
  char ch = ' '; //Variable to receive each character
  
@@ -196,6 +196,30 @@ void loop() {
             Serial1.println(garden_cmd);
             Serial1.flush();
         }
+    }
+
+    //Status command
+    if( str.equals("X") ) {
+      if(cmdAvailable) {
+        Serial2.println(str);
+        Serial2.flush();
+        
+        if(Serial2.available() > 0) {        
+            stat = "";
+            while(Serial2.available()) {
+                ch = Serial2.read();
+                delay(5);
+                if(ch == ':') {
+                    stat += ch;
+                    break;
+                }
+                else {
+                    stat += ch;
+                }
+                delay(5);
+            }
+      }
+      
     }
     
 }//End of loop

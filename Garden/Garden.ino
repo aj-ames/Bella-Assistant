@@ -134,12 +134,12 @@ int moistureSampler() {
 }
 
 void startSprinkler() {
-  for(int i=0;i<10;i++) {
+  for(int i = 0; i < 10; i++) {
     servo1.write(0);// For Position at 0 degrees
     digitalWrite(motorEn,HIGH);
     digitalWrite(motorPin1,HIGH);
     digitalWrite(motorPin2,LOW);
-    delay(5000);
+    delay(500);
     servo1.write(90);// For Position at 90 degrees
     digitalWrite(motorEn,HIGH);
     digitalWrite(motorPin1,HIGH);
