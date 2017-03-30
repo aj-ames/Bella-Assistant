@@ -1,4 +1,4 @@
-  /* 
+ /* 
  *  
  *  Code for the Arduino which will control the garden's automatic watering system
  *  This will receive the commands from the Arduino mega, the main controller
@@ -115,6 +115,9 @@ void setup() {
      }  
      if(cmd.equals("GSF")) {
         fail();
+     }
+     if(cmd.equals("X")) {
+      return sprinkler;
      }
      cmdAvailable = false;
   }// if command available
