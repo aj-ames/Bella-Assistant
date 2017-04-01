@@ -19,12 +19,7 @@
  *  GSS - Garden status; return the moisture
  *  GSO - Garden sprinkler turned ON
  *  GSF - Garden sprinkler turned OFF
- *  
- *  Serial0 is used to view on Serial Monitor
- *  Serial1 is used for Phone-Server Connection; The phone
- *  Serial2 is used for Server-Node1 Connection; The Room and Kitchen
- *  Serial3 is used for Server-Node2 Connection; The Garden
- *  
+ *
  *  P.S. All commands are followed by ':' character to mark Command Termination
  *  
  *  Make sure to set the board as "Arduino/Genuino Mega 2560" before compiling.
@@ -46,13 +41,13 @@
 #define wateringTime 40
 #define triggerMiostureContent 200
 #define warningMoistureContent 750
-#define delimiter : // To state the end of the command
+#define delimiter ':' // To state the end of the command
 
 //Variable to accumulate command and information
 String cmd = "", stat = "";
 
 //For each character
-char ch = ''; 
+char ch; 
 
 //For the food inventory
 String item1, item2, item3;
@@ -80,6 +75,15 @@ const int motorEn = 16;
 //The Arduino's LED pin
 const int ledPin = 13; // pin that turns on the LED
 
+Servo servo1;
+
+//Functions 
+void garden(String cmd);
+//void getStatus();
+long microToCms(long microseconds) {
+  return microseconds / 29 / 2;
+}
+void moistureSample();
 
 void setup() {
   Serial.begin(9600);
@@ -120,9 +124,9 @@ void loop() {
     garden(cmd);
   }
   //Get status
-  if( cmd.equals("X") ) {
-    getStatus();
-  }
+  //if( cmd.equals("X") ) {
+    //getStatus();
+  //}
 }// Void loop
 
 
@@ -151,7 +155,7 @@ void setupFunc() {
 
 void roomKitchen(String cmd) {
    //Turn on Room 1 Light 
-   if(str.equals("RL1O")) {
+   if(cmd.equals("RL1O")) {
     if(flag1) {
       Serial1.println("F1:"); // light is already on
       Serial1.flush();
@@ -169,7 +173,7 @@ void roomKitchen(String cmd) {
      }
     }
     //Turn off Room Light 1 
-    if(str.equals("RL1F")) {
+    if(cmd.equals("RL1F")) {
       if(!flag1) { //light 1 is already off
         Serial.println("F4:");
         Serial.flush();
@@ -189,7 +193,7 @@ void roomKitchen(String cmd) {
        }
     }
     //Turn on Room Light 2   
-    if(str.equals("RL2O")) {
+    if(cmd.equals("RL2O")) {
       if(flag2) {//light 2 is already on
         Serial.println("F2:");
         Serial.flush();
@@ -207,13 +211,12 @@ void roomKitchen(String cmd) {
        }
       }
       //Turn off Room Light 2 
-       if(str.equals("RL2F")) {
+       if(cmd.equals("RL2F")) {
         if(!flag2) {       //light 2 is already off
           Serial.println("F5");
           Serial.flush();
           Serial.println("F5:");
           Serial.flush();
-          cmdOK = true;
          }
          else {
           Serial.println("T5:");
@@ -225,7 +228,7 @@ void roomKitchen(String cmd) {
           digitalWrite(light2,HIGH);          
          }
        }
-       if(str == "KS") {
+       if(cmd == "KS") {
           long d1,d2,d3,cm1,cm2,cm3;
           int len = 100; //Length of Box. Assumed value for now. Update after boxes are obtained
           int p1,p2,p3; //To calculate percentage of grocery
@@ -331,6 +334,8 @@ void roomKitchen(String cmd) {
             Serial1.flush();
           }    
 }
+}
+
 
 void garden(String cmd) {
   if(cmd.equals("GSS")) {
@@ -351,7 +356,7 @@ void garden(String cmd) {
          Serial.println(moistureAvg);
          Serial.flush();
          Serial1.print("M1");
-         Serial1.printl(moistureAvg);
+         Serial1.println(moistureAvg);
          Serial1.flush();
          moistureAvg = 0; // Reset the value after printing 
         }
@@ -413,6 +418,14 @@ void initPosition() {
    servo1.write(90); // set the servo to mid-point
    delay(500);  
  }
+int moistureSampler() {
+  int sum = 0;
+  for(int i = 0; i < 25; i++) {
+    sum += analogRead(moisturePin);
+    delay(20);
+  }
+  return (sum / 25);
+}
 
 
 
