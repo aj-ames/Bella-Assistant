@@ -30,7 +30,7 @@
  *  Make sure to set the board as "Arduino/Genuino Mega 2560" before compiling.
  */
 
-
+#include<Servo.h>
 //Pin 10 and 11 for Relay
 #define light1  10
 #define light2 11
@@ -42,6 +42,11 @@
 #define ep2 5
 #define tp3 6
 #define ep3 7
+#define potPosition 60
+#define wateringTime 40
+#define triggerMiostureContent 200
+#define warningMoistureContent 750
+
 
 //Variable to accumulate command and information
 String cmd = "", stat = "";
@@ -56,6 +61,25 @@ String item1, item2, item3;
 boolean cmdAvailable = false;
 boolean flag1 = false;
 boolean flag2 = false;
+
+
+// Define the pin for moisture sensor
+const int moisturePin = A0;
+
+//The value that which will be read from the moisture sensor
+int moistureValue = 0;
+
+//The average moisture value
+long int moistureAvg = 0;
+
+//Pins to use the Sprinkler Motor
+const int motorPin1 = 14;
+const int motorPin2 = 15;
+const int motorEn = 16;
+
+//The Arduino's LED pin
+const int ledPin = 13; // pin that turns on the LED
+
 
 void setup() {
   Serial.begin(9600);
@@ -115,7 +139,14 @@ void setupFunc() {
   //Setting echopins as Input
   pinMode(ep1, INPUT);
   pinMode(ep2, INPUT);
-  pinMode(ep3, INPUT); 
+  pinMode(ep3, INPUT);
+  //Attach servo
+  servo1.attach(18); 
+  //Motor pins
+  pinMode(motorPin1, OUTPUT);
+  pinMode(motorPin2, OUTPUT);
+  pinMode(motorEn, OUTPUT);
+  pinMode(moisturePin, INPUT);
 }
 
 void roomKitchen(String cmd) {
@@ -300,5 +331,88 @@ void roomKitchen(String cmd) {
             Serial1.flush();
           }    
 }
+
+void garden(String cmd) {
+  if(cmd.equals("GSS")) {
+        moistureAvg = moistureSampler();
+        moistureAvg = (moistureAvg / 1024) * 100; // Calculate the percentage, for dear Bella *_*
+        moistureAvg = moistureAvg - 100; //To reverse the value
+        delay(100); //Just hold on a sec...
+        if(moistureAvg < 10) {
+          Serial1.print("M10");
+          Serial1.println(moistureAvg);
+          Serial1.flush();
+          Serial.print("M10");
+          Serial.println(moistureAvg);
+          Serial.flush();
+        }
+        else {
+         Serial.print("M1");
+         Serial.println(moistureAvg);
+         Serial.flush();
+         Serial1.print("M1");
+         Serial1.printl(moistureAvg);
+         Serial1.flush();
+         moistureAvg = 0; // Reset the value after printing 
+        }
+     }
+     if(cmd.equals("GSO")) {
+        moistureAvg = moistureSampler();
+        moistureAvg = (moistureAvg / 1024) * 100; // Calculate the percentage, for dear Bella *_*
+        moistureAvg = moistureAvg - 100; //To reverse the value
+        delay(100); //Just hold on a sec...
+        if(moistureAvg >= 80) {
+          Serial.println("F3:");//Soil is too wet to be watered
+          Serial.flush();
+          Serial1.println("F3:");
+          Serial1.flush();
+        }
+        else  {
+          startSprinkler();
+          Serial.println("T3:");
+          Serial.flush();
+          Serial1.println("T3:");
+          Serial1.flush();
+          initPosition();
+        }
+     }
+     if(cmd.equals("GSF")) {
+        fail();
+     }
+}
+
+void startSprinkler() {
+  for(int i = 0; i < 10; i++) {
+    servo1.write(0);// For Position at 0 degrees
+    digitalWrite(motorEn,HIGH);
+    digitalWrite(motorPin1,HIGH);
+    digitalWrite(motorPin2,LOW);
+    delay(500);
+    servo1.write(90);// For Position at 90 degrees
+    digitalWrite(motorEn,HIGH);
+    digitalWrite(motorPin1,HIGH);
+    digitalWrite(motorPin2,LOW);
+    delay(500);
+    servo1.write(180);// For Position at 180 degrees
+    digitalWrite(motorEn,HIGH);
+    digitalWrite(motorPin1,HIGH);
+    digitalWrite(motorPin2,LOW);
+    delay(500);
+  }
+}
+
+void fail() {
+  Serial.println("F7:");
+  Serial.flush();
+  Serial1.println("F7:");
+  Serial1.flush();
+}
+
+
+void initPosition() {
+   servo1.write(90); // set the servo to mid-point
+   delay(500);  
+ }
+
 
 
