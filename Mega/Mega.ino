@@ -30,8 +30,20 @@
  *  Make sure to set the board as "Arduino/Genuino Mega 2560" before compiling.
  */
 
-//Variable to accumulate command and information
 
+//Pin 10 and 11 for Relay
+#define light1  10
+#define light2 11
+
+//Pins 2-7 for Ultrasonic Sesnors
+#define tp1 2
+#define ep1 3
+#define tp2 4
+#define ep2 5
+#define tp3 6
+#define ep3 7
+
+//Variable to accumulate command and information
 String cmd = "", stat = "";
 
 //For each character
@@ -42,11 +54,14 @@ String item1, item2, item3;
 
 //Flags
 boolean cmdAvailable = false;
+boolean flag1 = false;
+boolean flag2 = false;
 
 void setup() {
   Serial.begin(9600);
   Serial1.begin(9600);
   Serial2.begin(9600);
+  setupFunc();
 }
 
 void loop() {
@@ -85,4 +100,100 @@ void loop() {
     getStatus();
   }
 }// Void loop
+
+
+void setupFunc() {
+  //Setting relay pins as Output
+  pinMode(light1, OUTPUT);       
+  pinMode(light2, OUTPUT);
+
+  //Setting triggerpins as Output
+  pinMode(tp1, OUTPUT); 
+  pinMode(tp2, OUTPUT); 
+  pinMode(tp3, OUTPUT);
+
+  //Setting echopins as Input
+  pinMode(ep1, INPUT);
+  pinMode(ep2, INPUT);
+  pinMode(ep3, INPUT); 
+}
+
+void roomKitchen(String cmd) {
+   //Turn on Room 1 Light 
+   if(str.equals("RL1O")) {
+    if(flag1) {
+      Serial1.println("F1:"); // light is already on
+      Serial1.flush();
+      Serial.println("F1:");
+      Serial.flush();
+     }
+     else {
+      Serial1.println("T1:");
+      Serial1.flush();
+      flag1 = true; // Change flag status
+      //Relay Instruction
+      digitalWrite(light1,LOW);
+      Serial.println("T1:");          
+      Serial.flush();
+     }
+    }
+    //Turn off Room Light 1 
+    if(str.equals("RL1F")) {
+      if(!flag1) { //light 1 is already off
+        Serial.println("F4:");
+        Serial.flush();
+        Serial1.println("F4:");
+        Serial1.flush();
+       }
+       else {
+        Serial.println("T4:");
+        Serial.flush();;
+        flag1 = false;
+        //Relay Instruction
+        digitalWrite(light1,HIGH);
+        Serial.println("F4:");          
+        Serial.flush();
+        Serial1.println("F4:");
+        Serial1.flush();
+       }
+    }
+    //Turn on Room Light 2   
+    if(str.equals("RL2O")) {
+      if(flag2) {//light 2 is already on
+        Serial.println("F2:");
+        Serial.flush();
+        Serial1.println("F2:");
+        Serial1.flush();
+       }
+       else {
+         Serial.println("T2:");
+         Serial.flush();
+         Serial1.println("F4:");
+         Serial1.flush();
+         flag2 = true;
+         //Relay Instruction
+         digitalWrite(light2,LOW);          
+       }
+      }
+      //Turn off Room Light 2 
+       if(str.equals("RL2F")) {
+        if(!flag2) {       //light 2 is already off
+          Serial.println("F5");
+          Serial.flush();
+          Serial.println("F5:");
+          Serial.flush();
+          cmdOK = true;
+         }
+         else {
+          Serial.println("T5:");
+          Serial.flush();
+          Serial1.println("T5:");
+          Serial1.flush();
+          flag2 = false;
+          //Relay Instruction
+          digitalWrite(light2,HIGH);          
+         }
+       }        
+}
+
 
