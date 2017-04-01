@@ -46,7 +46,7 @@
 #define wateringTime 40
 #define triggerMiostureContent 200
 #define warningMoistureContent 750
-
+#define delimiter : // To state the end of the command
 
 //Variable to accumulate command and information
 String cmd = "", stat = "";
