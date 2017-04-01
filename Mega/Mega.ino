@@ -35,7 +35,7 @@
 String cmd = "", stat = "";
 
 //For each character
-chat ch = ''; 
+char ch = ''; 
 
 //For the food inventory
 String item1, item2, item3;
@@ -71,9 +71,18 @@ void loop() {
   }
 
   //Getting the work done
-  if(str.equals("RL1O:") || str.equals("RL1F:") || str.equals("RL2O:") || str.equals("RL2F:") 
-        || str.equals("KS:")) {
+  // Room kitchen
+  if(cmd.equals("RL1O:") || cmd.equals("RL1F:") || cmd.equals("RL2O:") || cmd.equals("RL2F:") 
+        || cmd.equals("KS:")) {
     roomKitchen(cmd);
+  }
+  // Garden
+  if( cmd.equals("GSS:") || cmd.equals("GSO") || cmd.equals("GSF:") ) {
+    garden(cmd);
+  }
+  //Get status
+  if( cmd.equals("X") ) {
+    getStatus();
   }
 }// Void loop
 
