@@ -88,7 +88,8 @@ void moistureSample();
 void setup() {
   Serial.begin(9600);
   Serial1.begin(9600);
-  Serial2.begin(9600);
+  Serial.println("Wassup Bella!!!!!");
+  //Serial1.println("Wassup Bella!!!!!");
   setupFunc();
 }
 
@@ -101,7 +102,7 @@ void loop() {
       delay(5);
       if(ch == delimiter) {
         cmdAvailable = true;
-        cmd += ch;
+       // cmd += ch;
         break;
       }
       else {
@@ -112,21 +113,25 @@ void loop() {
     Serial.println(cmd);
     Serial.flush();
   }
-
+  if(cmdAvailable) {
   //Getting the work done
   // Room kitchen
-  if(cmd.equals("RL1O:") || cmd.equals("RL1F:") || cmd.equals("RL2O:") || cmd.equals("RL2F:") 
-        || cmd.equals("KS:")) {
+  if(cmd.equals("RL1O") || cmd.equals("RL1F") || cmd.equals("RL2O") || cmd.equals("RL2F") 
+        || cmd.equals("KS")) {
     roomKitchen(cmd);
+    cmdAvailable = false;
   }
   // Garden
-  if( cmd.equals("GSS:") || cmd.equals("GSO") || cmd.equals("GSF:") ) {
+  if( cmd.equals("GSS") || cmd.equals("GSO") || cmd.equals("GSF") ) {
     garden(cmd);
+    cmdAvailable = false;
   }
   //Get status
-  //if( cmd.equals("X") ) {
-    //getStatus();
-  //}
+  if( cmd.equals("X") ) {
+    getStatus();
+    cmdAvailable = false;
+  }
+  }
 }// Void loop
 
 
@@ -427,5 +432,22 @@ int moistureSampler() {
   return (sum / 25);
 }
 
+void getStatus() {
+  String sat = "";
+  //Build the sat string
+  if(flag1)
+    sat += "T";
+  else
+   sat += "F";
+  if(flag2) 
+    sat += "T";
+  else
+   sat += "F";
+  sat += "F:";
+  Serial1.println(sat);
+  Serial1.flush();
+  Serial.println(sat);
+  Serial.flush();
+}
 
 
