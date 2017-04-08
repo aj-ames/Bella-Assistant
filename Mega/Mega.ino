@@ -2,23 +2,18 @@
  *  This code will redirect the command code issued by Bella to the appropriate child node.
  *  
  *  Commands: 
- *  
- *  To be sent to Arduino Uno 1:
  *  RL1O - Room Light 1 On
  *  RL1F - Room Light 2 On
  *  RL2O - Room Light 1 On
  *  RL2F - Room Light 2 On
  *  RLS - Room Lights Status
- *  KS - Kitchen Status
- *  
- *  To be sent to phone:
- *  F - Room Light Already On/Off
- *  T - Room Light Turned On/Off
- *  
- *  To be sent to Arduino Uno 2:
+ *  KS - Kitchen Status  
  *  GSS - Garden status; return the moisture
  *  GSO - Garden sprinkler turned ON
  *  GSF - Garden sprinkler turned OFF
+ *  FT - Fan turned On
+ *  FF - Fan turned Off
+ *  
  *
  *  P.S. All commands are followed by ':' character to mark Command Termination
  *  
@@ -56,6 +51,7 @@ String item1, item2, item3;
 boolean cmdAvailable = false;
 boolean flag1 = false;
 boolean flag2 = false;
+boolean flag3 = false;
 
 
 // Define the pin for moisture sensor
@@ -68,9 +64,15 @@ int moistureValue = 0;
 long int moistureAvg = 0;
 
 //Pins to use the Sprinkler Motor
-const int motorPin1 = 14;
-const int motorPin2 = 15;
-const int motorEn = 16;
+const int motor1Pin1 = 14;
+const int motor1Pin2 = 15;
+const int motor1En = 16;
+const int motor2pin1 = 17;
+const int motor2pin2 = 18;
+const int motor2En = 19;
+
+//Pins to use Fan Motor
+
 
 //The Arduino's LED pin
 const int ledPin = 13; // pin that turns on the LED
@@ -117,7 +119,7 @@ void loop() {
   //Getting the work done
   // Room kitchen
   if(cmd.equals("RL1O") || cmd.equals("RL1F") || cmd.equals("RL2O") || cmd.equals("RL2F") 
-        || cmd.equals("KS")) {
+        || cmd.equals("KS") || cmd.equals("FT") || cmd.equals("FF")) {
     roomKitchen(cmd);
     cmdAvailable = false;
   }
@@ -152,9 +154,14 @@ void setupFunc() {
   //Attach servo
   servo1.attach(18); 
   //Motor pins
-  pinMode(motorPin1, OUTPUT);
-  pinMode(motorPin2, OUTPUT);
-  pinMode(motorEn, OUTPUT);
+  pinMode(motor1Pin1, OUTPUT);
+  pinMode(motor1Pin2, OUTPUT);
+  pinMode(motor1En, OUTPUT);
+  pinMode(motor2pin1, OUTPUT);
+  pinMode(motor2pin2, OUTPUT);
+  pinMode(motor2En, OUTPUT);
+
+  //Moisture Level Sensor
   pinMode(moisturePin, INPUT);
 }
 
@@ -220,8 +227,8 @@ void roomKitchen(String cmd) {
         if(!flag2) {       //light 2 is already off
           Serial.println("F5");
           Serial.flush();
-          Serial.println("F5:");
-          Serial.flush();
+          Serial1.println("F5:");
+          Serial1.flush();
          }
          else {
           Serial.println("T5:");
@@ -232,6 +239,34 @@ void roomKitchen(String cmd) {
           //Relay Instruction
           digitalWrite(light2,HIGH);          
          }
+       }
+       if(cmd.equals("FT")) {
+        if(flag3) {     //fan already on
+          Serial.print("S2:");
+          Serial.flush();
+          Serial1.print("S2:");
+          Serial1.flush();
+        }
+        else {
+          Serial.print("S1:");
+          Serial.flush();
+          Serial1.print("S1:");
+          Serial1.flush();
+        }
+       }
+       if(cmd.equals("FF")) {
+        if(!flag3) {    //fan already off
+          Serial.print("S4:");
+          Serial.flush();
+          Serial1.print("S4:");
+          Serial1.flush();
+        }
+        else {
+          Serial.print("S3:");
+          Serial.flush();
+          Serial1.print("S3:");
+          Serial1.flush();
+        }
        }
        if(cmd == "KS") {
           long d1,d2,d3,cm1,cm2,cm3;
@@ -394,19 +429,19 @@ void garden(String cmd) {
 void startSprinkler() {
   for(int i = 0; i < 10; i++) {
     servo1.write(0);// For Position at 0 degrees
-    digitalWrite(motorEn,HIGH);
-    digitalWrite(motorPin1,HIGH);
-    digitalWrite(motorPin2,LOW);
+    digitalWrite(motor1En,HIGH);
+    digitalWrite(motor1Pin1,HIGH);
+    digitalWrite(motor1Pin2,LOW);
     delay(500);
     servo1.write(90);// For Position at 90 degrees
-    digitalWrite(motorEn,HIGH);
-    digitalWrite(motorPin1,HIGH);
-    digitalWrite(motorPin2,LOW);
+    digitalWrite(motor1En,HIGH);
+    digitalWrite(motor1Pin1,HIGH);
+    digitalWrite(motor1Pin2,LOW);
     delay(500);
     servo1.write(180);// For Position at 180 degrees
-    digitalWrite(motorEn,HIGH);
-    digitalWrite(motorPin1,HIGH);
-    digitalWrite(motorPin2,LOW);
+    digitalWrite(motor1En,HIGH);
+    digitalWrite(motor1Pin1,HIGH);
+    digitalWrite(motor1Pin2,LOW);
     delay(500);
   }
 }
@@ -443,7 +478,11 @@ void getStatus() {
     sat += "T";
   else
    sat += "F";
-  sat += "F:";
+  if(flag3)
+    sat += "T";
+   else
+    sat += "F";
+  sat += ":";
   Serial1.println(sat);
   Serial1.flush();
   Serial.println(sat);
