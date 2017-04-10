@@ -274,10 +274,11 @@ void roomKitchen(String cmd) {
           int p1,p2,p3; //To calculate percentage of grocery
   
           digitalWrite(tp1, LOW); //low pulse first to ensure a clean high pulse.
-          //delayMicroseconds(2);  
+          delayMicroseconds(2); 
           digitalWrite(tp1, HIGH);
-          //delayMicroseconds(10);
+          delayMicroseconds(10);
           digitalWrite(tp1, LOW);
+          delayMicroseconds(10);
 
          // Read the signal from the sensor: a HIGH pulse whose
         // duration is the time (in microseconds) from the sending
@@ -291,10 +292,11 @@ void roomKitchen(String cmd) {
           //delay(100);
 
           digitalWrite(tp2, LOW); //low pulse first to ensure a clean high pulse.
-          //delayMicroseconds(2);  
+          delayMicroseconds(2); 
           digitalWrite(tp2, HIGH);
-          //delayMicroseconds(10);
+          delayMicroseconds(10);
           digitalWrite(tp2, LOW);
+          delayMicroseconds(10);
 
     // Read the signal from the sensor: a HIGH pulse whose
     // duration is the time (in microseconds) from the sending
@@ -307,11 +309,13 @@ void roomKitchen(String cmd) {
           //calculate percentage
           p2=(cm2/len)*100;
           //delay(100);
+          
           digitalWrite(tp3, LOW); //low pulse first to ensure a clean high pulse.
-          //delayMicroseconds(2);
+          delayMicroseconds(2); 
           digitalWrite(tp3, HIGH);
-          //delayMicroseconds(10);
+          delayMicroseconds(10);
           digitalWrite(tp3, LOW);
+          delayMicroseconds(10);
 
     // Read the signal from the sensor: a HIGH pulse whose
     // duration is the time (in microseconds) from the sending
