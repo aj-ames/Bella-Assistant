@@ -198,9 +198,7 @@ void roomKitchen(String cmd) {
         flag1 = false;
         //Relay Instruction
         digitalWrite(light1,HIGH);
-        Serial.println("F4:");          
-        Serial.flush();
-        Serial1.println("F4:");
+        Serial1.println("T4:");
         Serial1.flush();
        }
     }
@@ -215,7 +213,7 @@ void roomKitchen(String cmd) {
        else {
          Serial.println("T2:");
          Serial.flush();
-         Serial1.println("F4:");
+         Serial1.println("T2:");
          Serial1.flush();
          flag2 = true;
          //Relay Instruction
